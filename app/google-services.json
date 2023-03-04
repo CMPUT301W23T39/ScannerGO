@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1071258173208",
+    "project_id": "scannergo-20516",
+    "storage_bucket": "scannergo-20516.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1071258173208:android:c51824b4a6d13b19ab686d",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1071258173208-ov6prvrqf7470f49jk9pkoeggbt60de6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvG1BOL06PMwzwKqsb_5iI38m8cwidjP0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1071258173208-ov6prvrqf7470f49jk9pkoeggbt60de6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
