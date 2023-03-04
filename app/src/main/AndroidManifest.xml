@@ -29,7 +29,6 @@
         <activity
             android:name=".MyQRActivity">
         </activity>
-
     </application>
 
 </manifest>
