@@ -18,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Button recordButton = findViewById(R.id.Scan);
+        Button accountButton = findViewById(R.id.Account);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,6 +78,14 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 builder.create().show();
+            }
+        });
+        accountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,InMyAccountActivity.class);
+                startActivity(intent);
+                finish();
             }
         });
     }
