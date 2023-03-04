@@ -94,8 +94,12 @@ public class scan extends AppCompatActivity {
                                                         // Show a dialog allowing the user to input a comment
                                                         // TODO: Add code to allow comment input
                                                     }
+                                                })
+                                                .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        onResume();
+                                                    }
                                                 });
-                                        builder.setCancelable(true);
                                         builder.create().show();
                                     }
                                 })
@@ -114,9 +118,19 @@ public class scan extends AppCompatActivity {
                                                         // Show a dialog allowing the user to input a comment
                                                         // TODO: Add code to allow comment input
                                                     }
+                                                })
+                                                .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        onResume();
+                                                    }
                                                 });
-                                        builder.setCancelable(true);
+
                                         builder.create().show();
+                                    }
+                                })
+                                .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        onResume();
                                     }
                                 });
 
