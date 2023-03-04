@@ -27,8 +27,8 @@
         android:layout_height="45dp"
         android:text="Review:"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="-2dp"
-        tools:layout_editor_absoluteY="1dp" />
+        tools:layout_editor_absoluteX="2dp"
+        tools:layout_editor_absoluteY="0dp" />
 
     <TextView
         android:id="@+id/textView4"
