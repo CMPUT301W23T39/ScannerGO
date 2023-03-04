@@ -26,6 +26,10 @@
 
         <activity android:name=".InMyAccountActivity" />
         <activity android:name=".QRListActivity" />
+        <activity
+            android:name=".MyQRActivity">
+        </activity>
+
     </application>
 
 </manifest>
