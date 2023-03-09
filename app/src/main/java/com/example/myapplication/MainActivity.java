@@ -2,11 +2,8 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
-<<<<<<< Updated upstream
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
-=======
->>>>>>> Stashed changes
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,16 +15,24 @@ public class    MainActivity extends AppCompatActivity {
 
     @Override
 
+import android.view.View;
+import android.widget.Button;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Button recordButton = findViewById(R.id.Scan);
-<<<<<<< Updated upstream
-=======
+
         Button accountButton = findViewById(R.id.Account);
         Button rankButton = findViewById(R.id.Rank);
->>>>>>> Stashed changes
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,6 +129,19 @@ public class    MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, InMyRankActivity.class);
+        Button accountButton = findViewById(R.id.Account);
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScanAction.class);
+                startActivity(intent);
+            }
+
+        });
+        accountButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this,InMyAccountActivity.class);
                 startActivity(intent);
                 finish();
             }
