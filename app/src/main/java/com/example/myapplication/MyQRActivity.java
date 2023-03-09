@@ -33,6 +33,7 @@ public class MyQRActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MyQRActivity.this,QRListActivity.class);
                 intent.putExtra("DeleteCode",QRCode);
+                DB.delQRCodeInDB(QRCode);
                 startActivity(intent);
                 finish();
             }
