@@ -40,6 +40,7 @@ public class loginActivity extends AppCompatActivity {
     private TextView errorMessageTextView;
     private Button signupButton;
     private Button loginbyDeviceButton;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +57,7 @@ public class loginActivity extends AppCompatActivity {
 // Get a reference to the "devices" node in the database
         FirebaseApp.initializeApp(this);
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
