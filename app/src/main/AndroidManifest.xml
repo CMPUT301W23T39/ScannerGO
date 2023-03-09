@@ -43,6 +43,8 @@
         <activity
             android:name=".MyQRActivity">
         </activity>
+        <activity android:name=".loginActivity"/>
+        
     </application>
 
 </manifest>

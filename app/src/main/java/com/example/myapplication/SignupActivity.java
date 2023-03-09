@@ -1,23 +1,21 @@
 package com.example.myapplication;
 
-import static android.content.ContentValues.TAG;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.accounts.Account;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -36,7 +34,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.login);
 
         mNameEditText = findViewById(R.id.username);
         mPasswordEditText = findViewById(R.id.password);
@@ -44,9 +42,6 @@ public class SignupActivity extends AppCompatActivity {
         mSignUpButton = findViewById(R.id.signupBtn);
         errorMessageTextView = findViewById(R.id.errorMessageTextView);
         FirebaseApp.initializeApp(this);
-//        if(FirebaseApp.getApps(this).isEmpty()){
-//            FirebaseApp.initializeApp(this);
-//        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -56,32 +51,39 @@ public class SignupActivity extends AppCompatActivity {
                 String name = mNameEditText.getText().toString();
                 String password = mPasswordEditText.getText().toString();
                 String password2 = mConfirmPasswordEditText.getText().toString();
-//                Map<String, Object> curCityMap = new HashMap<>();
-//                curCityMap.put("userNameKey", name);
-//                curCityMap.put("passwordKey", password);
+                Map<String, Object> curUserMap = new HashMap<>();
+
 
                 if (password2.equals(password)) {
+                    curUserMap.put("userNameKey", name);
+                    curUserMap.put("passwordKey", password);
                     // Create a new account with the given details
-                    Account account = new Account(name, password);
+                    //Account account = new Account(name, password);
 
-                    // Store the account details in a local database or in the cloud
-
-                    // Start the MainActivity
-                    db.collection("username")
-                            .add(account)
+                    // Store the account details in a local database or in the cloud ekxww9yWbT19GDfhUQLX
+                    db.collection("username").document(name)
+                            .set(curUserMap)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d("RRG","Document successfully written!");
+                                    // Code to run when the operation succeeds
+                                    Log.d("RRG", "Document successfully written!");
+                                    Toast.makeText(getApplicationContext(), "User information added successfully", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(SignupActivity.this, loginActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.w(TAG, "Error adding account", e);
+                                    // Code to run when the operation fails
+                                    Log.d("RRG", "Error adding account");
+                                    Toast.makeText(getApplicationContext(), "Failed to add user information", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
+
                 else{
                     errorMessageTextView.setText("Please make sure the two passwords are identical");
                 }
