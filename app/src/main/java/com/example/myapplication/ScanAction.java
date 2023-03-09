@@ -100,7 +100,7 @@ public class ScanAction extends AppCompatActivity {
                                 else{
                                     base = (int)repeat.charAt(0) - 'a' + 10; //alphabet to int, for example a = 10.
                                 }
-                                int exponent = repeat.length() - 1; // exponent for repeats
+                                int exponent = repeat.length() - 1; // exponent for "b" repeats
                                 int score = (int) Math.pow(base, exponent); // calculate output value
                                 totalScore += score;
                             }
@@ -108,8 +108,7 @@ public class ScanAction extends AppCompatActivity {
                             Toast.makeText(ScanAction.this, Integer.toString(totalScore), Toast.LENGTH_SHORT).show();
 
                         } catch (NoSuchAlgorithmException e) {
-                            String warning = "Cannot convert to SHA-256";
-                            Toast.makeText(ScanAction.this, warning, Toast.LENGTH_SHORT).show();
+                            System.err.println("SHA-256 algorithm not found");
                         }
 
                         /**
