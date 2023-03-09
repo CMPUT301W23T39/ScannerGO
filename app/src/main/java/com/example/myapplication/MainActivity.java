@@ -1,10 +1,20 @@
 package com.example.myapplication;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class    MainActivity extends AppCompatActivity {
+
+    @Override
+
 import android.view.View;
 import android.widget.Button;
 
@@ -12,13 +22,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Button recordButton = findViewById(R.id.Scan);
+
         Button accountButton = findViewById(R.id.Account);
+        Button rankButton = findViewById(R.id.Rank);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,6 +93,50 @@ public class MainActivity extends AppCompatActivity {
                         });
                 builder.create().show();
             }
+
+        });
+
+
+
+
+
+
+
+
+
+
+//RANKING_BUTTON
+        Button rankButton = findViewById(R.id.rankButton);
+        rankButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Create an AlertDialog to display the rank image
+                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                builder.setTitle("Rank Image");
+                builder.setMessage("This is your rank image.");
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Close the dialog
+                        dialog.dismiss();
+                    }
+                });
+                builder.show();
+            }
+        });
+
+        rankButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, InMyRankActivity.class);
+        Button accountButton = findViewById(R.id.Account);
+        recordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ScanAction.class);
+                startActivity(intent);
+            }
+
         });
         accountButton.setOnClickListener(new View.OnClickListener() {
             @Override
