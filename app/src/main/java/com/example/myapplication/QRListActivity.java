@@ -31,7 +31,7 @@ public class QRListActivity extends AppCompatActivity {
 
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
-    private String currUsername = "1234";
+    public String currUsername = "1234";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +80,8 @@ public class QRListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(QRListActivity.this, MyQRActivity.class);
-                String QRCode = (String) parent.getItemAtPosition(position);
+                String wholeQRCode = (String) parent.getItemAtPosition(position);
+                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
                 intent.putExtra("QRCode", QRCode);
                 startActivity(intent);
             }
@@ -90,16 +91,18 @@ public class QRListActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(QRListActivity.this, InMyAccountActivity.class);
                 startActivity(intent);
-                finish();
             }
         });
 
-        Intent intent = getIntent();
-        String deleteItem = intent.getStringExtra("DeleteCode");
-        if (deleteItem != null) {
-            // Remove the item from the adapter and update the ListView
-            adapter.remove(deleteItem);
+
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Notify the adapter that the data has changed only if it is not null
+        if (adapter != null) {
             adapter.notifyDataSetChanged();
         }
     }
+
 }
