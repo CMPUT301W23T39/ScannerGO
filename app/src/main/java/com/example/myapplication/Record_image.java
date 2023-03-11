@@ -41,9 +41,6 @@ public class Record_image extends AppCompatActivity {
     ImageView selectedImage;
     Button cameraBtn,galleryBtn,SaveBtn,CancelBtn;
     String currentPhotoPath, QR_Comment;
-    StorageReference storageReference;
-
-
 
 
     @Override
@@ -54,19 +51,9 @@ public class Record_image extends AppCompatActivity {
         selectedImage = findViewById(R.id.displayImageView);
         cameraBtn = findViewById(R.id.cameraBtn);
         galleryBtn = findViewById(R.id.galleryBtn);
-        SaveBtn = findViewById(R.id.Button_Save);
         CancelBtn = findViewById(R.id.Button_Cancel);
 
         storageReference = FirebaseStorage.getInstance().getReference();
-
-        SaveBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Upload the image to Firebase
-                uploadImageToFirebase(new File(currentPhotoPath));
-                Comment();
-            }
-        });
 
         CancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,12 +86,14 @@ public class Record_image extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
                 selectedImage.setImageURI(Uri.fromFile(f));
-
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
                 mediaScanIntent.setData(contentUri);
                 this.sendBroadcast(mediaScanIntent);
+
+                uploadImageToFirebase(f.getName(), contentUri);
             }
+
         }
 
         if (requestCode == GALLERY_REQUEST_CODE) {
@@ -114,14 +103,19 @@ public class Record_image extends AppCompatActivity {
                 String imageFileName = "JPEG_" + timeStamp + "." + getFileExt(contentUri);
                 Log.d("tag", "onActivityResult: Gallery Image Uri:  " + imageFileName);
                 selectedImage.setImageURI(contentUri);
+
+                uploadImageToFirebase(imageFileName, contentUri);
+
+
             }
+
         }
+
+
     }
 
-
-    private void uploadImageToFirebase(File imageFile) {
-        final StorageReference image = storageReference.child("QR Codes/abcde/" + imageFile.getName());
-        Uri contentUri = Uri.fromFile(imageFile);
+    private void uploadImageToFirebase(String name, Uri contentUri) {
+        final StorageReference image = storageReference.child("QR Codes/abcde/");
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -129,19 +123,18 @@ public class Record_image extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
                         Toast.makeText(Record_image.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+                        Comment();
                     }
                 });
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Record_image.this, "Upload Failed.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Record_image.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
             }
         });
 
     }
-
-
 
     private String getFileExt(Uri contentUri) {
         ContentResolver c = getContentResolver();
@@ -154,7 +147,6 @@ public class Record_image extends AppCompatActivity {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
-//        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
@@ -217,5 +209,4 @@ public class Record_image extends AppCompatActivity {
         AlertDialog dialog1 = builder.create();
         dialog1.show();
     }
-
 }

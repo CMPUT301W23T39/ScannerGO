@@ -65,6 +65,7 @@ public class ScanAction extends AppCompatActivity {
         setContentView(R.layout.scanner);
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
+
         /**
          * back button
          */
