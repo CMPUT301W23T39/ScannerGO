@@ -12,7 +12,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -35,9 +34,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.google.zxing.Result;
 
 import java.nio.charset.StandardCharsets;
@@ -59,7 +55,7 @@ public class ScanAction extends AppCompatActivity {
 
     StringBuilder HASH = new StringBuilder();
     int QR_Point;
-    String QR_Comment;
+    String QR_Names,QR_Visual,QR_Comment;
     double QR_Latitude, QR_Longitude;
 
 
@@ -135,6 +131,11 @@ public class ScanAction extends AppCompatActivity {
                                 String message = "SHA-256 algorithm not found";
                                 Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                             }
+
+                            String hashPrefix = HASH.substring(0, 6);
+                            Name_System(hashPrefix);
+                            Visual_System(hashPrefix);
+
                             UpdateToUsers();
                             InitializeFireBase();
 
@@ -171,7 +172,7 @@ public class ScanAction extends AppCompatActivity {
                                                      */
                                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
-                                                            Intent intent = new Intent(ScanAction.this, Record_imagine.class);
+                                                            Intent intent = new Intent(ScanAction.this, Record_image.class);
                                                             startActivity(intent);
                                                         }
                                                     })
@@ -220,7 +221,7 @@ public class ScanAction extends AppCompatActivity {
                              */
                             .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(ScanAction.this, Record_imagine.class);
+                                    Intent intent = new Intent(ScanAction.this, Record_image.class);
                                     startActivity(intent);
                                 }
                             })
@@ -252,9 +253,8 @@ public class ScanAction extends AppCompatActivity {
                     if (snapshot.isEmpty()) {
                         // QR code collection doesn't exist, create a new one
                         Map<String, Object> qrCode = new HashMap<>();
-                        qrCode.put("Name", "GENERATE");
+                        qrCode.put("Name", QR_Names);
                         qrCode.put("Score", QR_Point);
-                        qrCode.put("Visual", "GENERATE");
                         qrCollection.document(String.valueOf(HASH)).set(qrCode);
 
                         // Create a new users sub-collection
@@ -313,9 +313,11 @@ public class ScanAction extends AppCompatActivity {
         DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
         GeoPoint location = new GeoPoint(QR_Latitude, QR_Longitude);
         Map<String, Object> data = new HashMap<>();
+        data.put("Name", QR_Names);
         data.put("Point", QR_Point);
         data.put("Comment", QR_Comment);
         data.put("Location", location);
+        data.put("Visual", QR_Visual);
         HashDoc.set(data);
     }
 
@@ -376,6 +378,53 @@ public class ScanAction extends AppCompatActivity {
         AlertDialog dialog1 = builder.create();
         dialog1.show();
     }
+
+    public void Name_System(String str){
+        String[] name1 = {"Cool ", "Hot "};
+        String[] name2 = {"Fro", "Glo"};
+        String[] name3 = {"Mo", "Lo"};
+        String[] name4= {"Mega", "Ultra"};
+        String[] name5 = {"Spectral", "Sonic"};
+        String[] name6 = {"Shark", "Crab"};
+
+        for (int i = 0; i < 6 && i < str.length(); i++) {
+            String[] currentArray;
+            char currentChar = str.charAt(i);
+
+            if (Character.isLetter(currentChar)) {
+                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                QR_Names += currentArray[0];
+            } else if (Character.isDigit(currentChar)) {
+                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                QR_Names += currentArray[1];
+            }
+        }
+        QR_Names = QR_Names.substring(4);
+    }
+
+    public void Visual_System(String str){
+        String[] name1 = {"^", "0"};
+        String[] name2 = {"3", "@"};
+        String[] name3 = {"-", "~"};
+        String[] name4 = {"v", "d"};
+        String[] name5 = {"/", "-"};
+        String[] name6 = {"*", " "};
+
+        for (int i = 0; i < 6 && i < str.length(); i++) {
+            String[] currentArray;
+            char currentChar = str.charAt(i);
+
+            if (Character.isLetter(currentChar)) {
+                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                QR_Visual += currentArray[0];
+            } else if (Character.isDigit(currentChar)) {
+                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                QR_Visual += currentArray[1];
+            }
+        }
+        QR_Visual = QR_Visual.substring(4);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

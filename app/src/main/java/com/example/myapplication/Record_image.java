@@ -1,12 +1,11 @@
 package com.example.myapplication;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,12 +18,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,12 +29,13 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Record_imagine extends AppCompatActivity {
+public class Record_image extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
     ImageView selectedImage;
@@ -52,7 +49,7 @@ public class Record_imagine extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.recording_imagine);
+        setContentView(R.layout.recording_image);
 
         selectedImage = findViewById(R.id.displayImageView);
         cameraBtn = findViewById(R.id.cameraBtn);
@@ -67,42 +64,14 @@ public class Record_imagine extends AppCompatActivity {
             public void onClick(View v) {
                 // Upload the image to Firebase
                 uploadImageToFirebase(new File(currentPhotoPath));
-                Toast.makeText(Record_imagine.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-                AlertDialog.Builder builder = new AlertDialog.Builder(Record_imagine.this);
-                builder.setTitle("Enter comments");
-                builder.setMessage("Please enter your comments:");
-                final EditText input = new EditText(Record_imagine.this);
-                builder.setView(input);
-                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        QR_Comment = input.getText().toString();
-                        String message = "QR Code has been saved";
-                        Toast.makeText(Record_imagine.this, message, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Record_imagine.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                });
-
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String message = "QR Code has been saved";
-                        Toast.makeText(Record_imagine.this, message, Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(Record_imagine.this, MainActivity.class);
-                        startActivity(intent);
-                    }
-                });
-                AlertDialog dialog1 = builder.create();
-                dialog1.show();
+                Comment();
             }
         });
 
         CancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Record_imagine.this, ScanAction.class);
-                startActivity(intent);
+                Comment();
             }
         });
 
@@ -130,7 +99,6 @@ public class Record_imagine extends AppCompatActivity {
             if (resultCode == Activity.RESULT_OK) {
                 File f = new File(currentPhotoPath);
                 selectedImage.setImageURI(Uri.fromFile(f));
-                Log.d("tag", "ABsolute Url of Image is " + Uri.fromFile(f));
 
                 Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
                 Uri contentUri = Uri.fromFile(f);
@@ -160,16 +128,16 @@ public class Record_imagine extends AppCompatActivity {
                 image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Log.d("tag", "onSuccess: Uploaded Image URl is " + uri.toString());
+                        Toast.makeText(Record_image.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         }).addOnFailureListener(new OnFailureListener() {
-             @Override
-             public void onFailure(@NonNull Exception e) {
-                 Toast.makeText(Record_imagine.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
-             }
-         });
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(Record_image.this, "Upload Failed.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
@@ -220,6 +188,33 @@ public class Record_imagine extends AppCompatActivity {
             }
 
     }
+    private void Comment(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(Record_image.this);
+        builder.setTitle("Enter comments");
+        builder.setMessage("Please enter your comments:");
+        final EditText input = new EditText(Record_image.this);
+        builder.setView(input);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                QR_Comment = input.getText().toString();
+                String message = "QR Code has been saved";
+                Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Record_image.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
 
-
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String message = "QR Code has been saved";
+                Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Record_image.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        AlertDialog dialog1 = builder.create();
+        dialog1.show();
+    }
 }
