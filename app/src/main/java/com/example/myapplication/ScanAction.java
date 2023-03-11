@@ -59,6 +59,14 @@ public class ScanAction extends AppCompatActivity {
     double QR_Latitude, QR_Longitude;
     String ID = loginActivity.username1;
 
+    public static String hash;
+    public String getHash(){
+        return hash;
+    }
+    public void setHash(String name){
+        hash = name;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,7 +112,7 @@ public class ScanAction extends AppCompatActivity {
                                 for (byte b : hash) {
                                     HASH.append(String.format("%02x", b));
                                 }
-
+                                setHash(String.valueOf(HASH));
                                 /**
                                  * Number of repeats
                                  */
