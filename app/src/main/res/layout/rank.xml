@@ -19,25 +19,25 @@
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player with highest Score:" />
+        android:text="QRcode with highest Score:   Hot GloMoMegaSpectralCrab(31)" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player Gender:" />
+        android:text="QRcode with lowest Score:   Hot GloMoMegaSpectralCrab(24)" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player Id:" />
+        android:text="QRcode Id:   None" />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player History QRcode Record:" />
+        android:text="Player History QRcode Record:   2" />
 
     <TextView
         android:id="@+id/textView16"
@@ -123,12 +123,22 @@
         android:id="@+id/textView30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode score in total:" />
+        android:text="QRcode score in total:   55" />
 
     <TextView
         android:id="@+id/textView31"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode score in average:" />
+        android:text="QRcode score in average:   28" />
+
+    <Button
+        android:id="@+id/firebase_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="FIREBASE LIST"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/firebase_button" />
 
 </LinearLayout>
