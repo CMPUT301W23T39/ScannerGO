@@ -20,16 +20,23 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.api.core.ApiFuture;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firestore.v1.WriteResult;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 
 public class loginActivity extends AppCompatActivity {
@@ -93,10 +100,10 @@ public class loginActivity extends AppCompatActivity {
 
                                     String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                                     Account account = new Account(username, password, androidId);
-                                    Map<String, Object> curUserMap = new HashMap<>();
-                                    curUserMap.put("device", androidId);
-                                    db.collection("username").document(username)
-                                            .set(curUserMap)
+//                                    Map<String, Object> curUserMap = new HashMap<>();
+                                    //curUserMap.put("device", androidId);
+                                    Task<Void> userRef = db.collection("username").document(username)
+                                            .update("device", androidId)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -149,16 +156,28 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("device key");
+                CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("username");
                 String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 // Create a query to retrieve the user document with the given username
                 Query query = usersCollection.whereEqualTo("device", androidId);
 
+                query.get().addOnCompleteListener(task -> { if (task.isSuccessful()) {
+                    // Iterate through the documents and get the userNamesKey value for the document that matches the filter
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        String userNamesKey = document.getString("userNameKey");
+                        // Do something with the userNamesKey value, such as print it to the console
+                        System.out.println("userNamesKey: " + userNamesKey); } }
+                    else { // Handle errors
+                         Log.d(TAG, "Error getting documents: ", task.getException()); } });
+//                DocumentReference userDoc = usersCollection.document(androidId);
+//                userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//                    @Override public void onSuccess(DocumentSnapshot documentSnapshot) { if (documentSnapshot.exists()) { String userNamesKey = documentSnapshot.getString("userNamesKey"); // Do something with the userNamesKey value } } });
+
 // Execute the query
-                query.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                query.get().addOnCompleteListener(task1 -> {
+                    if (task1.isSuccessful()) {
                         // Check if the query returned any documents
-                        if (!task.getResult().isEmpty()) {
+                        if (!task1.getResult().isEmpty()) {
                             // Get the first document (assuming there is only one document with the given username)
                             //DocumentSnapshot document = task.getResult().getDocuments().get(0);
                             Intent intent = new Intent(loginActivity.this, MainActivity.class);
