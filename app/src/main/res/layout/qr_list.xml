@@ -10,7 +10,7 @@
     <ListView
         android:id="@+id/qr_list"
         android:layout_width="match_parent"
-        android:layout_height="583dp"
+        android:layout_height="500dp"
         android:layout_weight="1">
 
     </ListView>
