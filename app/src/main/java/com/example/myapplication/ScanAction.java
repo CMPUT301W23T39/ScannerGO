@@ -11,8 +11,10 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 
+
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +28,7 @@ import com.budiyev.android.codescanner.DecodeCallback;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
@@ -50,9 +53,11 @@ public class ScanAction extends AppCompatActivity {
     private LocationListener locationListener;
     private FirebaseFirestore db;
 
-    String QR_Name;
+    StringBuilder HASH = new StringBuilder();
     int QR_Point;
+    String QR_Names,QR_Visual,QR_Comment;
     double QR_Latitude, QR_Longitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +65,7 @@ public class ScanAction extends AppCompatActivity {
         setContentView(R.layout.scanner);
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
+
         /**
          * back button
          */
@@ -81,7 +87,6 @@ public class ScanAction extends AppCompatActivity {
                     Manifest.permission.CAMERA
             }, 100);
         }
-
             mCodeScanner.setDecodeCallback(new DecodeCallback() {
                 @Override
                 public void onDecoded(@NonNull final Result result) {
@@ -89,23 +94,22 @@ public class ScanAction extends AppCompatActivity {
                         @Override
                         public void run() {
                             onPause();
-                            QR_Name = result.getText();
+
                             try {
                                 /**
                                  * 256 HASH
                                  */
                                 MessageDigest md = MessageDigest.getInstance("SHA-256");
                                 byte[] hash = md.digest(result.getText().getBytes(StandardCharsets.UTF_8));
-                                StringBuilder string = new StringBuilder();
                                 for (byte b : hash) {
-                                    string.append(String.format("%02x", b));
+                                    HASH.append(String.format("%02x", b));
                                 }
 
                                 /**
                                  * Number of repeats
                                  */
                                 Pattern pattern = Pattern.compile("([\\da-f])\\1+");
-                                Matcher matcher = pattern.matcher(string);
+                                Matcher matcher = pattern.matcher(HASH);
 
                                 /**
                                  * Get the score
@@ -125,8 +129,16 @@ public class ScanAction extends AppCompatActivity {
 
 
                             } catch (NoSuchAlgorithmException e) {
-                                System.err.println("SHA-256 algorithm not found");
+                                String message = "SHA-256 algorithm not found";
+                                Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                             }
+
+                            String hashPrefix = HASH.substring(0, 6);
+                            Name_System(hashPrefix);
+                            Visual_System(hashPrefix);
+
+                            UpdateToUsers();
+                            InitializeFireBase();
 
                             /**
                              * Pop up screens to ask user whether want to record location/image and leave comment
@@ -140,144 +152,43 @@ public class ScanAction extends AppCompatActivity {
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             //record location
-
+                                            String message1 = "Waiting for recording...";
+                                            Toast.makeText(ScanAction.this, message1, Toast.LENGTH_SHORT).show();
                                             if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
                                                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                                             }
-                                            try {
-                                                Thread.sleep(5000);
-                                            } catch (InterruptedException e) {
-                                                throw new RuntimeException(e);
-                                            }
-
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
-                                            builder.setMessage("Do you want to record an image?")
-
-                                                    /**
-                                                     * Recording image
-                                                     */
-                                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-
-                                                            // Show a dialog allowing the user to choose between taking a photo or uploading from the gallery
-                                                            final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
-                                                            AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
-                                                            builder.setTitle("Choose an option");
-                                                            builder.setItems(options, new DialogInterface.OnClickListener() {
-                                                                @Override
-                                                                public void onClick(DialogInterface dialog, int which) {
-                                                                    if (options[which].equals("Take a Picture")) {
-
-                                                                    } else if (options[which].equals("Choose from Gallery")) {
-
-                                                                    } else {
-                                                                        onResume();
-                                                                    }
-                                                                }
-                                                            });
-                                                            builder.show();
-                                                        }
-                                                    })
-
-                                                    /**
-                                                     * Not recording image
-                                                     */
-                                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            // Show a dialog allowing the user to input a comment
-                                                            // TODO: Add code to allow comment input
-                                                        }
-                                                    })
-                                                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            onResume();
-                                                        }
-                                                    });
-                                            builder.create().show();
                                         }
                                     })
 
                                     /**
                                      * Not recording location
                                      */
-                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
                                             builder.setMessage("Do you want to record an image?")
 
                                                     /**
-                                                     * Recording image
+                                                     * Not recording location and Recording image
                                                      */
                                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
-                                                            // Show a dialog allowing the user to upload an image
-                                                            // TODO: Add code to allow image upload
+                                                            Intent intent = new Intent(ScanAction.this, Record_image.class);
+                                                            startActivity(intent);
                                                         }
                                                     })
 
                                                     /**
-                                                     * Not recording image
+                                                     * Not recording location and Not recording image
                                                      */
-                                                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                                    .setNeutralButton("No", new DialogInterface.OnClickListener() {
                                                         public void onClick(DialogInterface dialog, int id) {
-                                                            // Show a dialog allowing the user to input a comment
-                                                            // TODO: Add code to allow comment input
-                                                        }
-                                                    })
-                                                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            onResume();
+                                                            Comment();
                                                         }
                                                     });
-
                                             builder.create().show();
                                         }
-                                    })
-                                    .setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            onResume();
-                                        }
                                     });
-
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            CollectionReference qrCollection = db.collection("QR Codes");
-                            Query query = qrCollection.whereEqualTo("Name", QR_Name);
-                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
-                                        QuerySnapshot snapshot = task.getResult();
-                                        if (snapshot.isEmpty()) {
-                                            // QR code collection doesn't exist, create a new one
-                                            Map<String, Object> qrCode = new HashMap<>();
-                                            qrCode.put("Name", "GENERATE");
-                                            qrCode.put("Score", QR_Point);
-                                            qrCode.put("Visual", "GENERATE");
-                                            qrCollection.document(QR_Name).set(qrCode);
-
-                                            // Create a new users sub-collection
-                                            CollectionReference usersCollection = qrCollection.document(QR_Name).collection("users");
-                                            usersCollection.document("1234").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                                    if (task.isSuccessful()) {
-                                                        DocumentSnapshot document = task.getResult();
-                                                        if (!document.exists()) {
-                                                            // Create a new document for user 1234
-                                                            Map<String, Object> userData = new HashMap<>();
-                                                            userData.put("Location", new GeoPoint(QR_Latitude, QR_Longitude));
-                                                            userData.put("Comments", "");
-                                                            usersCollection.document("1234").set(userData);
-                                                        }
-                                                    } else {
-                                                    }
-                                                }
-                                            });
-                                        }
-                                    } else {
-                                    }
-                                }
-                            });
                             builder.create().show();
                         }
                     });
@@ -296,13 +207,225 @@ public class ScanAction extends AppCompatActivity {
                 public void onLocationChanged(Location location) {
                     QR_Latitude = location.getLatitude();
                     QR_Longitude = location.getLongitude();
-                    String message = "Successfully recording location";
                     locationManager.removeUpdates(this);
-                    Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
-                    // Do something with the latitude and longitude, such as saving to a database
+
+                    User_UpdateGeolocation();
+                    UpdateGeolocation();
+
+                    String message2 = "Successfully recording location";
+                    Toast.makeText(ScanAction.this, message2, Toast.LENGTH_SHORT).show();
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+                    builder.setMessage("Do you want to record an image?")
+                            /**
+                             * Recording location and Recording image
+                             */
+                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(ScanAction.this, Record_image.class);
+                                    startActivity(intent);
+                                }
+                            })
+
+                            /**
+                             * Recording Location and Not recording image
+                             */
+                            .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Comment();
+                                }
+                            });
+                    builder.create().show();
                 }
             };
         }
+
+
+    //Initialize QR Code FireBase
+    public void  InitializeFireBase(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("QR Codes");
+        Query query = qrCollection.whereEqualTo("Name", String.valueOf(HASH));
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot snapshot = task.getResult();
+                    if (snapshot.isEmpty()) {
+                        // QR code collection doesn't exist, create a new one
+                        Map<String, Object> qrCode = new HashMap<>();
+                        qrCode.put("Name", QR_Names);
+                        qrCode.put("Score", QR_Point);
+                        qrCollection.document(String.valueOf(HASH)).set(qrCode);
+
+                        // Create a new users sub-collection
+                        CollectionReference usersCollection = qrCollection.document(String.valueOf(HASH)).collection("users");
+                        usersCollection.document("1234").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    DocumentSnapshot document = task.getResult();
+                                    if (!document.exists()) {
+                                        // Create a new document for user 1234
+                                        Map<String, Object> userData = new HashMap<>();
+                                        userData.put("Location", new GeoPoint(QR_Latitude, QR_Longitude));
+                                        userData.put("Comment", "");
+                                        usersCollection.document("1234").set(userData);
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+    public void  UpdateComment(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("QR Codes");
+        DocumentReference qrHashDoc = qrCollection.document(String.valueOf(HASH));
+        CollectionReference usersCollection = qrHashDoc.collection("users");
+        DocumentReference user = usersCollection.document("1234");
+        user.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                user.update("Comment", QR_Comment);
+            }
+        });
+    }
+
+    public void  UpdateGeolocation(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("QR Codes");
+        DocumentReference qrHashDoc = qrCollection.document(String.valueOf(HASH));
+        CollectionReference usersCollection = qrHashDoc.collection("users");
+        DocumentReference user = usersCollection.document("1234");
+        user.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                user.update("Location", new GeoPoint(QR_Latitude, QR_Longitude));
+            }
+        });
+    }
+
+    public void  UpdateToUsers(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference userCollection = db.collection("username");
+        DocumentReference document = userCollection.document("1234");
+        CollectionReference qrCollection = document.collection("QR Codes");
+        DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
+        GeoPoint location = new GeoPoint(QR_Latitude, QR_Longitude);
+        Map<String, Object> data = new HashMap<>();
+        data.put("Name", QR_Names);
+        data.put("Point", QR_Point);
+        data.put("Comment", QR_Comment);
+        data.put("Location", location);
+        data.put("Visual", QR_Visual);
+        HashDoc.set(data);
+    }
+
+    public void  User_UpdateGeolocation(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference userCollection = db.collection("username");
+        DocumentReference document = userCollection.document("1234");
+        CollectionReference qrCollection = document.collection("QR Codes");
+        DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
+        HashDoc.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                HashDoc.update("Location", new GeoPoint(QR_Latitude, QR_Longitude));
+            }
+        });
+    }
+
+    public void  User_UpdateComment(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference userCollection = db.collection("username");
+        DocumentReference document = userCollection.document("1234");
+        CollectionReference qrCollection = document.collection("QR Codes");
+        DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
+        HashDoc.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                HashDoc.update("Comment", QR_Comment);
+            }
+        });
+    }
+
+    public void Comment(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+        builder.setTitle("Enter comments");
+        builder.setMessage("Please enter your comments:");
+        final EditText input = new EditText(ScanAction.this);
+        builder.setView(input);
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                QR_Comment = input.getText().toString();
+                UpdateComment();
+                User_UpdateComment();
+                String message = "QR Code has been saved";
+                Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ScanAction.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String message = "QR Code has been saved";
+                Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ScanAction.this, MainActivity.class);
+                startActivity(intent);
+            }
+        });
+        AlertDialog dialog1 = builder.create();
+        dialog1.show();
+    }
+
+    public void Name_System(String str){
+        String[] name1 = {"Cool ", "Hot "};
+        String[] name2 = {"Fro", "Glo"};
+        String[] name3 = {"Mo", "Lo"};
+        String[] name4= {"Mega", "Ultra"};
+        String[] name5 = {"Spectral", "Sonic"};
+        String[] name6 = {"Shark", "Crab"};
+
+        for (int i = 0; i < 6 && i < str.length(); i++) {
+            String[] currentArray;
+            char currentChar = str.charAt(i);
+
+            if (Character.isLetter(currentChar)) {
+                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                QR_Names += currentArray[0];
+            } else if (Character.isDigit(currentChar)) {
+                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                QR_Names += currentArray[1];
+            }
+        }
+        QR_Names = QR_Names.substring(4);
+    }
+
+    public void Visual_System(String str){
+        String[] eye = {"^", "0"};
+        String[] ear = {"3", "@"};
+        String[] Eyebrow = {"-", "~"};
+        String[] mouse = {"v", "-"};
+        String[] hand = {"/", "d"};
+        String[] flower = {"*", " "};
+
+        for (int i = 0; i < 6 && i < str.length(); i++) {
+            String[] currentArray;
+            char currentChar = str.charAt(i);
+
+            if (Character.isLetter(currentChar)) {
+                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
+                QR_Visual += currentArray[0];
+            } else if (Character.isDigit(currentChar)) {
+                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
+                QR_Visual += currentArray[1];
+            }
+        }
+        QR_Visual = QR_Visual.substring(4);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

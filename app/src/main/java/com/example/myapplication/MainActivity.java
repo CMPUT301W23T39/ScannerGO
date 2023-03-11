@@ -15,11 +15,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Button recordButton = findViewById(R.id.Scan);
         Button accountButton = findViewById(R.id.Account);
+
+        Button rankButton = findViewById(R.id.Rank);
+
         Button mapButton = findViewById(R.id.Map);
+
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ScanAction.class);
+                Intent intent = new Intent(MainActivity.this, scan.class);
                 startActivity(intent);
             }
 
@@ -32,6 +36,12 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        rankButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, InMyRankActivity.class);}
+            });
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
