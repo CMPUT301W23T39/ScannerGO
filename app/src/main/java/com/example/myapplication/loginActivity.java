@@ -90,11 +90,13 @@ public class loginActivity extends AppCompatActivity {
                                 // Check if the password matches
                                 if (passwordFromDatabase.equals(password)) {
                                     // Password matches, so login
+
                                     String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                                    Map<String, Object> curidMap = new HashMap<>();
-                                    curidMap.put("device", androidId);
-                                    db.collection("device key").document(androidId)
-                                            .set(curidMap)
+                                    Account account = new Account(username, password, androidId);
+                                    Map<String, Object> curUserMap = new HashMap<>();
+                                    curUserMap.put("device", androidId);
+                                    db.collection("username").document(username)
+                                            .set(curUserMap)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -102,6 +104,17 @@ public class loginActivity extends AppCompatActivity {
                                                     Toast.makeText(getApplicationContext(), "AndroidID added successfully", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
+//                                    Map<String, Object> curidMap = new HashMap<>();
+//                                    curidMap.put("device", androidId);
+//                                    db.collection("device key").document(androidId)
+//                                            .set(curidMap)
+//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                                @Override
+//                                                public void onSuccess(Void aVoid) {
+//                                                    // Code to run when the operation succeeds
+//                                                    Toast.makeText(getApplicationContext(), "AndroidID added successfully", Toast.LENGTH_SHORT).show();
+//                                                }
+//                                            });
                                     Intent intent = new Intent(loginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
