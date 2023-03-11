@@ -2,15 +2,11 @@ package com.example.myapplication;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,25 +14,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.api.core.ApiFuture;
+//import com.google.api.core.ApiFuture;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firestore.v1.WriteResult;
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class loginActivity extends AppCompatActivity {
@@ -48,7 +36,13 @@ public class loginActivity extends AppCompatActivity {
     private Button signupButton;
     private Button loginbyDeviceButton;
     private FirebaseFirestore db;
-
+    public static String username1;
+    public String getUsername1(){
+        return username1;
+    }
+    public void setUsername1(String name){
+        username1 = name;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +94,8 @@ public class loginActivity extends AppCompatActivity {
 
                                     String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                                     Account account = new Account(username, password, androidId);
-//                                    Map<String, Object> curUserMap = new HashMap<>();
-                                    //curUserMap.put("device", androidId);
+                                    setUsername1(username);
+                                    //System.out.println(getUsername1());
                                     Task<Void> userRef = db.collection("username").document(username)
                                             .update("device", androidId)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -111,17 +105,7 @@ public class loginActivity extends AppCompatActivity {
                                                     Toast.makeText(getApplicationContext(), "AndroidID added successfully", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-//                                    Map<String, Object> curidMap = new HashMap<>();
-//                                    curidMap.put("device", androidId);
-//                                    db.collection("device key").document(androidId)
-//                                            .set(curidMap)
-//                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                                @Override
-//                                                public void onSuccess(Void aVoid) {
-//                                                    // Code to run when the operation succeeds
-//                                                    Toast.makeText(getApplicationContext(), "AndroidID added successfully", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            });
+//
                                     Intent intent = new Intent(loginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -159,20 +143,28 @@ public class loginActivity extends AppCompatActivity {
                 CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("username");
                 String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 // Create a query to retrieve the user document with the given username
+//                AtomicReference<String> username = new AtomicReference<>();
+//                AtomicReference<String> password = new AtomicReference<>();
+                usersCollection.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String device = document.getString("device");
+                            if (device != null) {
+                                if (device.equals(androidId)) {
+                                    Account account = new Account(document.getString("userNameKey"), document.getString("passwordKey"), androidId);
+                                    setUsername1(document.getString("userNameKey"));
+//                                Intent intent = new Intent(loginActivity.this, MainActivity.class);
+//                                startActivity(intent);
+//                                finish();
+                                }
+                            }
+                            else{ // Handle errors
+                                Log.d(TAG, "android id does not exist ", task.getException());
+                            }
+                        }
+                    }});
+//                  @Override public void onSuccess(Document
                 Query query = usersCollection.whereEqualTo("device", androidId);
-
-                query.get().addOnCompleteListener(task -> { if (task.isSuccessful()) {
-                    // Iterate through the documents and get the userNamesKey value for the document that matches the filter
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        String userNamesKey = document.getString("userNameKey");
-                        // Do something with the userNamesKey value, such as print it to the console
-                        System.out.println("userNamesKey: " + userNamesKey); } }
-                    else { // Handle errors
-                         Log.d(TAG, "Error getting documents: ", task.getException()); } });
-//                DocumentReference userDoc = usersCollection.document(androidId);
-//                userDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-//                    @Override public void onSuccess(DocumentSnapshot documentSnapshot) { if (documentSnapshot.exists()) { String userNamesKey = documentSnapshot.getString("userNamesKey"); // Do something with the userNamesKey value } } });
-
 // Execute the query
                 query.get().addOnCompleteListener(task1 -> {
                     if (task1.isSuccessful()) {
@@ -202,4 +194,5 @@ public class loginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
+
 }
