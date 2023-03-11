@@ -6,33 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-
-<<<<<<< Updated upstream
-    <ListView
-        android:id="@+id/QRCODE_list"
-        android:layout_width="match_parent"
-        android:layout_height="583dp"
-        android:layout_weight="1">
-
-    </ListView>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Count:  Total:  Highest:  Lowest:  " />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_weight="1"
-        android:text="Back" />
-=======
-
-
-
+    
     <Button
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
@@ -156,7 +130,5 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="QRcode score in average:" />
-
->>>>>>> Stashed changes
 
 </LinearLayout>
