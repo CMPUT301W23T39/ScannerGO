@@ -41,7 +41,7 @@ public class Record_image extends AppCompatActivity {
     ImageView selectedImage;
     Button cameraBtn,galleryBtn,SaveBtn,CancelBtn;
     String currentPhotoPath, QR_Comment;
-
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
