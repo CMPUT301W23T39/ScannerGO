@@ -130,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, InMyRankActivity.class);
         Button accountButton = findViewById(R.id.Account);
+        Button mapButton = findViewById(R.id.Map);
         recordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,6 +143,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this,InMyAccountActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        mapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, map.class);
                 startActivity(intent);
                 finish();
             }
