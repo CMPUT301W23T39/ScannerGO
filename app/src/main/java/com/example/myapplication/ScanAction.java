@@ -403,22 +403,22 @@ public class ScanAction extends AppCompatActivity {
     }
 
     public void Visual_System(String str){
-        String[] name1 = {"^", "0"};
-        String[] name2 = {"3", "@"};
-        String[] name3 = {"-", "~"};
-        String[] name4 = {"v", "d"};
-        String[] name5 = {"/", "-"};
-        String[] name6 = {"*", " "};
+        String[] eye = {"^", "0"};
+        String[] ear = {"3", "@"};
+        String[] Eyebrow = {"-", "~"};
+        String[] mouse = {"v", "-"};
+        String[] hand = {"/", "d"};
+        String[] flower = {"*", " "};
 
         for (int i = 0; i < 6 && i < str.length(); i++) {
             String[] currentArray;
             char currentChar = str.charAt(i);
 
             if (Character.isLetter(currentChar)) {
-                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
                 QR_Visual += currentArray[0];
             } else if (Character.isDigit(currentChar)) {
-                currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
+                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
                 QR_Visual += currentArray[1];
             }
         }

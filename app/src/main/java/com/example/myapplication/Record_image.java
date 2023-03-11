@@ -217,4 +217,5 @@ public class Record_image extends AppCompatActivity {
         AlertDialog dialog1 = builder.create();
         dialog1.show();
     }
+
 }
