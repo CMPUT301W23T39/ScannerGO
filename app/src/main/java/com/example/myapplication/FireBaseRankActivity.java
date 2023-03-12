@@ -93,12 +93,20 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     // Retrieve the "Name" field of each document in the subcollection
-
                     String name = document.getString("Name");
-                    qrCodesList.add(name + "\n");
+                    String visual = document.getString("Visual");
+                    StringBuilder faceBuilder = new StringBuilder();
+                    char hands = visual.charAt(4);
+                    char ears = visual.charAt(1);
+                    char eyes = visual.charAt(0);
+                    char eyebrows = visual.charAt(2);
+                    char mouth = visual.charAt(3);
+                    char flower = visual.charAt(5);
+                    faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
+                    String face = faceBuilder.toString();
+                    qrCodesList.add(name+"\n"+face);
 
                 }
                 adapter = new ArrayAdapter<>(FireBaseRankActivity.this, android.R.layout.simple_list_item_1, qrCodesList);
