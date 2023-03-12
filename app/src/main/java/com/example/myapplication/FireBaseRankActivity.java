@@ -15,11 +15,15 @@ import com.example.myapplication.InMyAccountActivity;
 import com.example.myapplication.MyQRActivity;
 import com.example.myapplication.R;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.database.DataSnapshot;
 import java.util.ArrayList;
 
 public class FireBaseRankActivity extends AppCompatActivity {
@@ -27,6 +31,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
     public String currUsername = "None";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,8 +45,23 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         CollectionReference userCollection = db.collection("username");
         DocumentReference userDocRef = userCollection.document(currUsername);
-
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("myData");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String value = dataSnapshot.getValue(String.class);
+                // Do something with the value
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+
+
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
