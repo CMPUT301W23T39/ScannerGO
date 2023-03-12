@@ -37,7 +37,7 @@
         android:id="@+id/textView33"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="  QRcodeName:   Hot GloMoMegaSpectralCrab" />
+        android:text="QRcode2Name:   Hot GloMoMegaSpectralCrab" />
 
     <TextView
         android:id="@+id/textView34"
