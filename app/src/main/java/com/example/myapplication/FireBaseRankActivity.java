@@ -25,34 +25,79 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.database.DataSnapshot;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class FireBaseRankActivity extends AppCompatActivity {
 
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
-    public String currUsername = "None";
+    public String currUsername = loginActivity.username1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.firebase_rank);
+
+
         ListView rankList = findViewById(R.id.rank_list);
         Button backButton = findViewById(R.id.back_button);
         FirebaseApp.initializeApp(this);
         ArrayList<String> qrCodesList = new ArrayList<>();
+        ArrayList<Integer> scoresList = new ArrayList<>();
+
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-
         CollectionReference userCollection = db.collection("username");
+
         DocumentReference userDocRef = userCollection.document(currUsername);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("myData");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
+
+
+
+//        qrCodesCollection.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    // Retrieve the "Score" field of each document in the subcollection
+//                    Integer score = document.getLong("Score").intValue();
+//                    scoresList.add(score);
+//                }
+//                // Use built-in Java methods to find the lowest and highest score
+//                int lowestScore = Collections.min(scoresList);
+//                int highestScore = Collections.max(scoresList);
+//                // Do something with the lowest and highest score
+//                System.out.println("Lowest score: " + lowestScore);
+//                System.out.println("Highest score: " + highestScore);
+//            } else {
+//                System.out.println("Error getting documents: " + task.getException());
+//            }
+//        });
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String value = dataSnapshot.getValue(String.class);
                 // Do something with the value
+
+                // Find the lowest and highest score
+                long lowestScore = Long.MAX_VALUE;
+                long highestScore = Long.MIN_VALUE;
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Long score = snapshot.child("Score").getValue(Long.class);
+                    if (score != null) {
+                        if (score < lowestScore) {
+                            lowestScore = score;
+                        }
+                        if (score > highestScore) {
+                            highestScore = score;
+                        }
+                    }
+                }
+
+                // Do something with the lowest and highest score
+                System.out.println("Lowest score: " + lowestScore);
+                System.out.println("Highest score: " + highestScore);
             }
 
             @Override
@@ -65,26 +110,45 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     // Retrieve the "Name" field of each document in the subcollection
+
                     String name = document.getString("Name");
                     String visual = document.getString("Visual");
-                    StringBuilder faceBuilder = new StringBuilder();
-                    char hands = visual.charAt(4);
-                    char ears = visual.charAt(1);
-                    char eyes = visual.charAt(0);
-                    char eyebrows = visual.charAt(2);
-                    char mouth = visual.charAt(3);
-                    char flower = visual.charAt(5);
-                    faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
-                    String face = faceBuilder.toString();
-                    qrCodesList.add(name+"\n"+face);
+//                    StringBuilder faceBuilder = new StringBuilder();
+//                    char hands = visual.charAt(4);
+//                    char ears = visual.charAt(1);
+//                    char eyes = visual.charAt(0);
+//                    char eyebrows = visual.charAt(2);
+//                    char mouth = visual.charAt(3);
+//                    char flower = visual.charAt(5);
+//                    faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
+//                    String face = faceBuilder.toString();
+                    qrCodesList.add(name+"\n");
 
                 }
                 adapter = new ArrayAdapter<>(FireBaseRankActivity.this, android.R.layout.simple_list_item_1,qrCodesList);
                 rankList.setAdapter(adapter);
                 // Do something with the ArrayList of names
                 System.out.println(qrCodesList);
+
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    // Retrieve the "Score" field of each document in the subcollection
+                    Integer score = document.getLong("Score").intValue();
+                    scoresList.add(score);
+                }
+                // Use built-in Java methods to find the lowest and highest score
+                int lowestScore = Collections.min(scoresList);
+                int highestScore = Collections.max(scoresList);
+                // Do something with the lowest and highest score
+                System.out.println("Lowest score: " + lowestScore);
+                System.out.println("Highest score: " + highestScore);
+
+
+
+
+
             } else {
                 System.out.println("Error getting documents: " + task.getException());
             }
@@ -96,7 +160,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
                 String wholeQRCode = (String) parent.getItemAtPosition(position);
-                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+               String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
                 intent.putExtra("QRCode", QRCode);
                 startActivity(intent);
             }
