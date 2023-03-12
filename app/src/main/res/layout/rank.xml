@@ -19,25 +19,25 @@
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode with highest Score:   Hot GloMoMegaSpectralCrab(31)" />
+        android:text="QRcode with highest Score:   Hot GloMoMegaSpectralCrab" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode with lowest Score:   Hot GloMoMegaSpectralCrab(24)" />
+        android:text="QRcode with lowest Score:   Hot GloMoMegaSpectralCrab" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode Id:   None" />
+        android:text="QRcode Id:  " />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player History QRcode Record:   2" />
+        android:text="Player History QRcode Record:  " />
 
     <TextView
         android:id="@+id/textView16"
@@ -123,13 +123,13 @@
         android:id="@+id/textView30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode score in total:   55" />
+        android:text="QRcode score in total:  " />
 
     <TextView
         android:id="@+id/textView31"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode score in average:   28" />
+        android:text="QRcode score in average:   " />
 
     <Button
         android:id="@+id/firebase_button"

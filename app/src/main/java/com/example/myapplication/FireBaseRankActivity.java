@@ -141,8 +141,8 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
-                highlowCode.setText("Highest QRcode: "+highestScore+"            "+"Lowest QRcode:"+lowestScore
-                +"\n" + "Total: " + size);
+                highlowCode.setText("Highest QRcode Score: "+highestScore+"            "+"Lowest QRcode Score:"+lowestScore
+                +"\n" + "Total Amount of QRcode: " + size);
 
             } else {
                 System.out.println("Error getting documents: " + task.getException());
