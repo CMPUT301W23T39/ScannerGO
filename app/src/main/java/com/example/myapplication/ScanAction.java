@@ -159,6 +159,11 @@ public class ScanAction extends AppCompatActivity {
                                      */
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
+                                            if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                                                    != PackageManager.PERMISSION_GRANTED) {
+                                                ActivityCompat.requestPermissions(ScanAction.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                        100);
+                                            }
                                             //record location
                                             String message1 = "Waiting for recording...";
                                             Toast.makeText(ScanAction.this, message1, Toast.LENGTH_SHORT).show();
