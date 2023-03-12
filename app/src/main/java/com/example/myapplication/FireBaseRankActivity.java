@@ -55,26 +55,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
         DocumentReference userDocRef = userCollection.document(currUsername);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
-
-
-
-//        qrCodesCollection.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    // Retrieve the "Score" field of each document in the subcollection
-//                    Integer score = document.getLong("Score").intValue();
-//                    scoresList.add(score);
-//                }
-//                // Use built-in Java methods to find the lowest and highest score
-//                int lowestScore = Collections.min(scoresList);
-//                int highestScore = Collections.max(scoresList);
-//                // Do something with the lowest and highest score
-//                System.out.println("Lowest score: " + lowestScore);
-//                System.out.println("Highest score: " + highestScore);
-//            } else {
-//                System.out.println("Error getting documents: " + task.getException());
-//            }
-//        });
+        
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
