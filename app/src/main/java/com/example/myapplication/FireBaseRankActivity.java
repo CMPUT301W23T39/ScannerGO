@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         ListView rankList = findViewById(R.id.rank_list);
         Button backButton = findViewById(R.id.back_button);
+        TextView highlowCode = findViewById(R.id.highlow_code);
         FirebaseApp.initializeApp(this);
         ArrayList<String> qrCodesList = new ArrayList<>();
         ArrayList<Integer> scoresList = new ArrayList<>();
@@ -138,7 +140,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
-
+                highlowCode.setText("Highest QRcode: "+highestScore+"            "+"Lowest QRcode:"+lowestScore);
 
             } else {
                 System.out.println("Error getting documents: " + task.getException());
