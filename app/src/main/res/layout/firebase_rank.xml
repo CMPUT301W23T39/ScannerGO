@@ -7,43 +7,26 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <ListView
+        android:id="@+id/rank_list"
+        android:layout_width="match_parent"
+        android:layout_height="392dp"
+        android:layout_weight="1">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/highlow_code"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Highest QRcode:            Lowest QRcode:" />
+
     <Button
         android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BACK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="321dp" />
-
-    <TextView
-        android:id="@+id/textView11"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="QRcode1Name:   Hot GloMoMegaSpectralCrab" />
-
-    <TextView
-        android:id="@+id/textView12"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="QRcode1Score:   31" />
-
-    <TextView
-        android:id="@+id/textView32"
-        android:layout_width="match_parent"
-        android:layout_height="81dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/textView33"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="  QRcodeName:   Hot GloMoMegaSpectralCrab" />
-
-    <TextView
-        android:id="@+id/textView34"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="QRcode2Score:   24" />
-
+        android:layout_height="4dp"
+        android:layout_weight="1"
+        android:text="Back" />
 
 </LinearLayout>
