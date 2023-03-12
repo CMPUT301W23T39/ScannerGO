@@ -34,6 +34,7 @@ public class MyQRActivity extends AppCompatActivity {
 
         TextView CommentText = findViewById(R.id.comment_text);
         TextView LocationText = findViewById(R.id.location_text);
+        TextView ScoreText = findViewById(R.id.score);
         Button backButton = findViewById(R.id.back_button2);
         Button deleteButton = findViewById(R.id.delete_button);
         Intent intent = getIntent();
@@ -52,6 +53,10 @@ public class MyQRActivity extends AppCompatActivity {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             String comment = document.getString("Comment");
                             CommentText.setText("Comment: "+comment);
+                        }
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String score = document.getString("Score");
+                            ScoreText.setText("Score: "+ score);
                         }
                         for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                             GeoPoint location = documentSnapshot.getGeoPoint("Location");
