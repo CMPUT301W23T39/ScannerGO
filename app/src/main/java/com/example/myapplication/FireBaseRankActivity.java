@@ -55,7 +55,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
         DocumentReference userDocRef = userCollection.document(currUsername);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
-        
+
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
