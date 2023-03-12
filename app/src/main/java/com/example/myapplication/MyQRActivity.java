@@ -27,18 +27,35 @@ public class MyQRActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myqr);
         TextView QRCodeName = findViewById(R.id.qrcode_name);
+        TextView Location = findViewById(R.id.location);
+        TextView comment = findViewById(R.id.Comments);
+
         Button backButton = findViewById(R.id.back_button2);
         Button deleteButton = findViewById(R.id.delete_button);
         Intent intent = getIntent();
         String QRCode = intent.getStringExtra("QRCode");
         QRCodeName.setText("Name: "+QRCode);
-        String username = "1234";
+
+        String username = loginActivity.username1;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference userDocRef = userCollection.document(username);
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 // Get the document with ID "some username" from the "username" collection
-
+//        qrCodesCollection.get().addOnCompleteListener(task -> {
+//            if (task.isSuccessful()) {
+//                for (QueryDocumentSnapshot document : task.getResult()) {
+//                    String  = document.getString("device");
+//                    if (device != null) {
+//                        if (device.equals(androidId)) {
+//                            setUsername1(document.getString("userNameKey"));
+//                        }
+//                    }
+//                    else{ // Handle errors
+//                        Log.d(TAG, "android id does not exist ", task.getException());
+//                    }
+//                }
+//            }});
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
