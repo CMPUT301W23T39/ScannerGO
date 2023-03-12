@@ -63,7 +63,7 @@ public class SignupActivity extends AppCompatActivity {
 
                 Query query = usersCollection.whereEqualTo("userNameKey", name);
                 query.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
+                    if (!task.getResult().isEmpty()) {
                         // Check if the query returned any documents
                         Toast.makeText(getApplicationContext(), "Username already exists. Please choose a different username.", Toast.LENGTH_SHORT).show();
                     } else {
