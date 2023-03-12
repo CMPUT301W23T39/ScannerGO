@@ -109,7 +109,7 @@ public class loginActivity extends AppCompatActivity {
                                 if (passwordFromDatabase.equals(password)) {
                                     // Password matches, so login
                                     String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-                                    Account account = new Account(username, password, androidId);
+
                                     setUsername1(username);
                                     //System.out.println(getUsername1());
                                     Task<Void> userRef = db.collection("username").document(username)
@@ -167,7 +167,6 @@ public class loginActivity extends AppCompatActivity {
                             String device = document.getString("device");
                             if (device != null) {
                                 if (device.equals(androidId)) {
-                                    Account account = new Account(document.getString("userNameKey"), document.getString("passwordKey"), androidId);
                                     setUsername1(document.getString("userNameKey"));
                                 }
                             }
