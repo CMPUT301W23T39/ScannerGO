@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -33,6 +34,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.Result;
 
@@ -41,7 +43,10 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.Manifest;
@@ -282,6 +287,7 @@ public class ScanAction extends AppCompatActivity {
                                         // Create a new document for user 1234
                                         Map<String, Object> userData = new HashMap<>();
                                         userData.put("Location", new GeoPoint(QR_Latitude, QR_Longitude));
+                                        userData.put("ID", ID);
                                         usersCollection.document(ID).set(userData);
                                     }
                                 }
@@ -379,11 +385,11 @@ public class ScanAction extends AppCompatActivity {
         dialog1.show();
     }
 
-    public void Name_System(String str){
+    public void Name_System(String str) {
         String[] name1 = {"Cool ", "Hot "};
         String[] name2 = {"Fro", "Glo"};
         String[] name3 = {"Mo", "Lo"};
-        String[] name4= {"Mega", "Ultra"};
+        String[] name4 = {"Mega", "Ultra"};
         String[] name5 = {"Spectral", "Sonic"};
         String[] name6 = {"Shark", "Crab"};
 
@@ -400,6 +406,49 @@ public class ScanAction extends AppCompatActivity {
             }
         }
         QR_Names = QR_Names.substring(4);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("QR Codes");
+
+        int counter = 1;
+        while (true) {
+            String nameToCheck = QR_Names + (counter > 1 ? " " + counter : "");
+            Query query = qrCollection.whereEqualTo("Name", nameToCheck);
+            Task<QuerySnapshot> querySnapshotTask = query.get();
+            while (!querySnapshotTask.isSuccessful()) {
+                // Handle errors
+            }
+            QuerySnapshot querySnapshot = querySnapshotTask.getResult();
+            if (querySnapshot.isEmpty()) {
+                // No existing documents with the same name found, break the loop
+                QR_Names = nameToCheck;
+                break;
+            } else {
+                boolean foundMatchingDocument = false;
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    String documentId = document.getId();
+                    CollectionReference collection = qrCollection.document(documentId).collection("users");
+                    Query subQuery = collection.whereEqualTo("ID", ID);
+                    Task<QuerySnapshot> subQuerySnapshotTask = subQuery.get();
+                    while (!subQuerySnapshotTask.isSuccessful()) {
+                        // Handle errors
+                    }
+                    QuerySnapshot subQuerySnapshot = subQuerySnapshotTask.getResult();
+                    if (!subQuerySnapshot.isEmpty()) {
+                        foundMatchingDocument = true;
+                        break;
+                    }
+                }
+                if (!foundMatchingDocument) {
+                    // No existing documents with the same name and collection with ID = 2 found, break the loop
+                    QR_Names = nameToCheck;
+                    break;
+                } else {
+                    // Increment the counter
+                    counter++;
+                }
+            }
+        }
     }
 
     public void Visual_System(String str){
