@@ -22,6 +22,9 @@ public class ProfileActivity extends AppCompatActivity {
         Button backButton = findViewById(R.id.back_button3);
         Button editButton = findViewById(R.id.edit_button);
         TextView contactText = findViewById(R.id.contact_text);
+        TextView userText = findViewById(R.id.username_text);
+        String username = loginActivity.username1;
+        userText.setText(username);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
