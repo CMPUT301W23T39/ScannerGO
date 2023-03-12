@@ -46,17 +46,15 @@ public class map extends AppCompatActivity {
     FusedLocationProviderClient client;
     GoogleMap googleMap;
     ArrayList<LatLng> latLngList = new ArrayList<>();  // Declare latLngList as a member variable
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
         FirebaseApp.initializeApp(this);
-
+        getUserLocation();
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.google_map);
         client = LocationServices.getFusedLocationProviderClient(this);
-
         if (ActivityCompat.checkSelfPermission(map.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             getCurrentLocation();
         else {
@@ -65,33 +63,43 @@ public class map extends AppCompatActivity {
     }
 
     // Add this method to add markers to the map
-    private void addMarkersToMap() {
-        for (LatLng latLng : latLngList) {
-            MarkerOptions options = new MarkerOptions().position(latLng).title("QRCode location");
-            googleMap.addMarker(options);
-        }
-    }
-    public void getUserLocation(String qrHash, String userId) {
+    public void getUserLocation() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
-        DocumentReference qrHashDoc = qrCollection.document();
-        CollectionReference usersCollection = qrHashDoc.collection("users");
-        DocumentReference user = usersCollection.document(userId);
-        user.get().addOnCompleteListener(task -> {
+
+        qrCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                GeoPoint location = task.getResult().getGeoPoint("Location");
-                if (location != null) {
-                    double latitude = location.getLatitude();
-                    double longitude = location.getLongitude();
-                    Log.e("location", String.valueOf(latitude));
-                    // Do something with latitude and longitude
-                } else {
-                    // Handle case where location is null
+                for (QueryDocumentSnapshot qrDoc : task.getResult()) {
+                    CollectionReference usersCollection = qrDoc.getReference().collection("users");
+                    usersCollection.get().addOnCompleteListener(usersTask -> {
+                        if (usersTask.isSuccessful()) {
+                            for (QueryDocumentSnapshot userDoc : usersTask.getResult()) {
+                                GeoPoint location = userDoc.getGeoPoint("Location");
+                                if (location != null) {
+                                    double lat = location.getLatitude();
+                                    double lng = location.getLongitude();
+                                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                    latLngList.add(latLng);
+
+                                    // do something with the location
+                                    Log.d(TAG, "Location: " + lat + ", " + lng);
+                                }
+                            }
+                            for (LatLng latLng : latLngList) {
+                                MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
+                                googleMap.addMarker(options);
+                            }
+
+                        } else {
+                            Log.d(TAG, "Error getting users: ", usersTask.getException());
+                        }
+                    });
                 }
             } else {
-                // Handle error
+                Log.d(TAG, "Error getting QR codes: ", task.getException());
             }
         });
+
     }
 
     private void getCurrentLocation() {
@@ -108,6 +116,7 @@ public class map extends AppCompatActivity {
                     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
+                            map.this.googleMap = googleMap;
                             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                             Log.e("latLng",latLng.toString());    //37.4220936      -122.083922
                             MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
