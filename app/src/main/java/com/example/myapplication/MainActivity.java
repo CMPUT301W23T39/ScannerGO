@@ -40,7 +40,10 @@ public class MainActivity extends AppCompatActivity {
         rankButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, InMyRankActivity.class);}
+                Intent intent = new Intent(MainActivity.this, InMyRankActivity.class);
+                startActivity(intent);
+                finish();
+            }
             });
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
