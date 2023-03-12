@@ -127,7 +127,7 @@ public class map extends AppCompatActivity {
                             map.this.googleMap = googleMap;
                             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                             Log.e("latLng",latLng.toString());    //37.4220936      -122.083922
-                            MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
+                            MarkerOptions options = new MarkerOptions().position(latLng).title("you are here");
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                             googleMap.addMarker(options);
                         }
