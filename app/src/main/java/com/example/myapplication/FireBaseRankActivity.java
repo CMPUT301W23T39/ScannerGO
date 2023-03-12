@@ -124,7 +124,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 System.out.println(qrCodesList);
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
-                    Integer score = document.getLong("Score") != null ? document.getLong("Score").intValue() : 0;
+                    Integer score = document.getLong("Point") != null ? document.getLong("Point").intValue() : 0;
                     scoresList.add(score);
                 }
 
