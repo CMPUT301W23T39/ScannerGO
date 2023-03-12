@@ -18,8 +18,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.type.LatLng;
+
+import org.w3c.dom.Text;
 
 public class MyQRActivity extends AppCompatActivity {
     @Override
@@ -27,17 +31,40 @@ public class MyQRActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myqr);
         TextView QRCodeName = findViewById(R.id.qrcode_name);
+
+        TextView CommentText = findViewById(R.id.comment_text);
+        TextView LocationText = findViewById(R.id.location_text);
+        TextView ScoreText = findViewById(R.id.score);
         Button backButton = findViewById(R.id.back_button2);
         Button deleteButton = findViewById(R.id.delete_button);
         Intent intent = getIntent();
         String QRCode = intent.getStringExtra("QRCode");
         QRCodeName.setText("Name: "+QRCode);
-        String username = "1234";
+
+        String username = loginActivity.username1;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference userDocRef = userCollection.document(username);
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 // Get the document with ID "some username" from the "username" collection
+
+        qrCodesCollection.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (QRCode.equals(document.getString("Name"))) {
+                                String comment = document.getString("Comment");
+                                CommentText.setText("Comment: " + comment);
+                                Long score = document.getLong("Point");
+                                ScoreText.setText("Score: " + score);
+                                GeoPoint location = document.getGeoPoint("Location");
+                                double lat = location.getLatitude();
+                                double lng = location.getLongitude();
+                                String loc = lat + ", " + lng;
+                                LocationText.setText("Location: " + loc);
+                            }
+                        }
+                    }
+                });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

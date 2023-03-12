@@ -6,6 +6,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import android.content.Intent;
 import android.location.Location;
 import android.Manifest;
 
@@ -20,6 +21,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -31,6 +34,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
@@ -44,66 +48,80 @@ public class map extends AppCompatActivity {
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
     GoogleMap googleMap;
-
+    private Button back;
+    ArrayList<LatLng> latLngList = new ArrayList<>();  // Declare latLngList as a member variable
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+        back = findViewById(R.id.backFromMap);
         FirebaseApp.initializeApp(this);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference qrCodesRef = db.collection("QR codes");
-        ArrayList<LatLng> latLngList = new ArrayList<>();
-
-        qrCodesRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        // iterate through all the documents in the "QR codes" collection
-                        CollectionReference usersRef = document.getReference().collection("users");
-                        usersRef.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot user : task.getResult()) {
-                                        // retrieve the location data for each user in the "users" collection
-                                        GeoPoint location = user.getGeoPoint("location");
-                                        // do something with the location data
-                                        double lng = location.getLongitude();
-                                        double lat = location.getLatitude();
-                                        latLngList.add(new LatLng(lat,lng));
-                                    }
-                                } else {
-                                    Log.d(TAG, "Error getting users: ", task.getException());
-                                }
-                            }
-                        });
-                    }
-                } else {
-                    Log.d(TAG, "Error getting QR codes: ", task.getException());
-                }
-            }
-        });
-
+        getUserLocation();
         supportMapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.google_map);
         client = LocationServices.getFusedLocationProviderClient(this);
-        // assume that the location of the QRCode is stored in a LatLng object named qrCodeLocation
-        for (LatLng latLng : latLngList) {
-            // assume that the location of the QRCode is stored in a LatLng object named qrCodeLocation
-            MarkerOptions options = new MarkerOptions().position(latLng).title("QRCode location");
-            googleMap.addMarker(options);
-
-        }
-
-
         if (ActivityCompat.checkSelfPermission(map.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
             getCurrentLocation();
         else {
             ActivityCompat.requestPermissions(map.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
         }
-
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(map.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
     }
+
+    // Add this method to add markers to the map
+    public void getUserLocation() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("QR Codes");
+
+        qrCollection.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot qrDoc : task.getResult()) {
+                    CollectionReference usersCollection = qrDoc.getReference().collection("users");
+                    usersCollection.get().addOnCompleteListener(usersTask -> {
+                        if (usersTask.isSuccessful()) {
+                            for (QueryDocumentSnapshot userDoc : usersTask.getResult()) {
+                                GeoPoint location = userDoc.getGeoPoint("Location");
+                                if (location != null) {
+                                    double lat = location.getLatitude();
+                                    double lng = location.getLongitude();
+                                    LatLng latLng = new LatLng(lat,lng);
+                                    latLngList.add(latLng);
+
+                                    // do something with the location
+                                    Log.d(TAG, "Location: " + lat + ", " + lng);
+                                }
+                            }
+
+                            // Move this loop to inside the onMapReady callback
+                            // to add markers to the map
+                            supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                                @Override
+                                public void onMapReady(@NonNull GoogleMap googleMap) {
+                                    for (LatLng latLng : latLngList) {
+                                        MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
+                                        googleMap.addMarker(options);
+                                    }
+                                }
+                            });
+
+                        } else {
+                            Log.d(TAG, "Error getting users: ", usersTask.getException());
+                        }
+                    });
+                }
+            } else {
+                Log.d(TAG, "Error getting QR codes: ", task.getException());
+            }
+        });
+    }
+
 
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
@@ -119,9 +137,10 @@ public class map extends AppCompatActivity {
                     supportMapFragment.getMapAsync(new OnMapReadyCallback() {
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
+                            map.this.googleMap = googleMap;
                             LatLng latLng = new LatLng(location.getLatitude(),location.getLongitude());
                             Log.e("latLng",latLng.toString());    //37.4220936      -122.083922
-                            MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
+                            MarkerOptions options = new MarkerOptions().position(latLng).title("you are here");
                             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng,10));
                             googleMap.addMarker(options);
                         }
