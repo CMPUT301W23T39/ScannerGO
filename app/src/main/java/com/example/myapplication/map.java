@@ -85,10 +85,18 @@ public class map extends AppCompatActivity {
                                     Log.d(TAG, "Location: " + lat + ", " + lng);
                                 }
                             }
-                            for (LatLng latLng : latLngList) {
-                                MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
-                                googleMap.addMarker(options);
-                            }
+
+                            // Move this loop to inside the onMapReady callback
+                            // to add markers to the map
+                            supportMapFragment.getMapAsync(new OnMapReadyCallback() {
+                                @Override
+                                public void onMapReady(@NonNull GoogleMap googleMap) {
+                                    for (LatLng latLng : latLngList) {
+                                        MarkerOptions options = new MarkerOptions().position(latLng).title("QRcode is here");
+                                        googleMap.addMarker(options);
+                                    }
+                                }
+                            });
 
                         } else {
                             Log.d(TAG, "Error getting users: ", usersTask.getException());
@@ -99,8 +107,8 @@ public class map extends AppCompatActivity {
                 Log.d(TAG, "Error getting QR codes: ", task.getException());
             }
         });
-
     }
+
 
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
