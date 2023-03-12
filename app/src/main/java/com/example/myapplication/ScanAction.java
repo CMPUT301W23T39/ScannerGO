@@ -57,7 +57,15 @@ public class ScanAction extends AppCompatActivity {
     int QR_Point;
     String QR_Names,QR_Visual,QR_Comment;
     double QR_Latitude, QR_Longitude;
+    String ID = loginActivity.username1;
 
+    public static String hash;
+    public String getHash(){
+        return hash;
+    }
+    public void setHash(String name){
+        hash = name;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +112,7 @@ public class ScanAction extends AppCompatActivity {
                                 for (byte b : hash) {
                                     HASH.append(String.format("%02x", b));
                                 }
-
+                                setHash(String.valueOf(HASH));
                                 /**
                                  * Number of repeats
                                  */
@@ -151,6 +159,11 @@ public class ScanAction extends AppCompatActivity {
                                      */
                                     .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
+                                            if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                                                    != PackageManager.PERMISSION_GRANTED) {
+                                                ActivityCompat.requestPermissions(ScanAction.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                        100);
+                                            }
                                             //record location
                                             String message1 = "Waiting for recording...";
                                             Toast.makeText(ScanAction.this, message1, Toast.LENGTH_SHORT).show();
@@ -260,7 +273,7 @@ public class ScanAction extends AppCompatActivity {
 
                         // Create a new users sub-collection
                         CollectionReference usersCollection = qrCollection.document(String.valueOf(HASH)).collection("users");
-                        usersCollection.document("1234").get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        usersCollection.document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 if (task.isSuccessful()) {
@@ -269,8 +282,7 @@ public class ScanAction extends AppCompatActivity {
                                         // Create a new document for user 1234
                                         Map<String, Object> userData = new HashMap<>();
                                         userData.put("Location", new GeoPoint(QR_Latitude, QR_Longitude));
-                                        userData.put("Comment", "");
-                                        usersCollection.document("1234").set(userData);
+                                        usersCollection.document(ID).set(userData);
                                     }
                                 }
                             }
@@ -280,25 +292,13 @@ public class ScanAction extends AppCompatActivity {
             }
         });
     }
-    public void  UpdateComment(){
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference qrCollection = db.collection("QR Codes");
-        DocumentReference qrHashDoc = qrCollection.document(String.valueOf(HASH));
-        CollectionReference usersCollection = qrHashDoc.collection("users");
-        DocumentReference user = usersCollection.document("1234");
-        user.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                user.update("Comment", QR_Comment);
-            }
-        });
-    }
 
     public void  UpdateGeolocation(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
         DocumentReference qrHashDoc = qrCollection.document(String.valueOf(HASH));
         CollectionReference usersCollection = qrHashDoc.collection("users");
-        DocumentReference user = usersCollection.document("1234");
+        DocumentReference user = usersCollection.document(ID);
         user.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 user.update("Location", new GeoPoint(QR_Latitude, QR_Longitude));
@@ -309,7 +309,7 @@ public class ScanAction extends AppCompatActivity {
     public void  UpdateToUsers(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
-        DocumentReference document = userCollection.document("1234");
+        DocumentReference document = userCollection.document(ID);
         CollectionReference qrCollection = document.collection("QR Codes");
         DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
         GeoPoint location = new GeoPoint(QR_Latitude, QR_Longitude);
@@ -325,7 +325,7 @@ public class ScanAction extends AppCompatActivity {
     public void  User_UpdateGeolocation(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
-        DocumentReference document = userCollection.document("1234");
+        DocumentReference document = userCollection.document(ID);
         CollectionReference qrCollection = document.collection("QR Codes");
         DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
         HashDoc.get().addOnCompleteListener(task -> {
@@ -338,7 +338,7 @@ public class ScanAction extends AppCompatActivity {
     public void  User_UpdateComment(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
-        DocumentReference document = userCollection.document("1234");
+        DocumentReference document = userCollection.document(ID);
         CollectionReference qrCollection = document.collection("QR Codes");
         DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
         HashDoc.get().addOnCompleteListener(task -> {
@@ -358,7 +358,6 @@ public class ScanAction extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 QR_Comment = input.getText().toString();
-                UpdateComment();
                 User_UpdateComment();
                 String message = "QR Code has been saved";
                 Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();

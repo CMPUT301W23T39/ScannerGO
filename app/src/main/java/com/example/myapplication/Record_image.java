@@ -25,6 +25,9 @@ import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -39,10 +42,11 @@ public class Record_image extends AppCompatActivity {
     public static final int CAMERA_REQUEST_CODE = 102;
     public static final int GALLERY_REQUEST_CODE = 105;
     ImageView selectedImage;
-    Button cameraBtn,galleryBtn,SaveBtn,CancelBtn;
+    Button cameraBtn,galleryBtn,CancelBtn;
     String currentPhotoPath, QR_Comment;
     StorageReference storageReference;
-
+    String ID = loginActivity.username1;
+    String hash = ScanAction.hash;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,8 +109,6 @@ public class Record_image extends AppCompatActivity {
                 selectedImage.setImageURI(contentUri);
 
                 uploadImageToFirebase(imageFileName, contentUri);
-
-
             }
 
         }
@@ -115,7 +117,7 @@ public class Record_image extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(String name, Uri contentUri) {
-        final StorageReference image = storageReference.child("QR Codes/abcde/");
+        final StorageReference image = storageReference.child("Users/"+ ID + "/" + hash + "/" + name);
         image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -190,6 +192,7 @@ public class Record_image extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 QR_Comment = input.getText().toString();
+                User_UpdateComment();
                 String message = "QR Code has been saved";
                 Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Record_image.this, MainActivity.class);
@@ -208,5 +211,18 @@ public class Record_image extends AppCompatActivity {
         });
         AlertDialog dialog1 = builder.create();
         dialog1.show();
+    }
+
+    public void  User_UpdateComment(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("username");
+        DocumentReference qrHashDoc = qrCollection.document(ID);
+        CollectionReference usersCollection = qrHashDoc.collection("QR Codes");
+        DocumentReference user = usersCollection.document(hash);
+        user.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                user.update("Comment", QR_Comment);
+            }
+        });
     }
 }
