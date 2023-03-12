@@ -31,7 +31,8 @@ public class QRListActivity extends AppCompatActivity {
 
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
-    public String currUsername = "1234";
+
+    public String currUsername = loginActivity.username1;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
