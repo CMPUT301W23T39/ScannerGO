@@ -18,8 +18,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.type.LatLng;
+
+import org.w3c.dom.Text;
 
 public class MyQRActivity extends AppCompatActivity {
     @Override
@@ -27,9 +31,9 @@ public class MyQRActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.myqr);
         TextView QRCodeName = findViewById(R.id.qrcode_name);
-        TextView Location = findViewById(R.id.location);
-        TextView comment = findViewById(R.id.Comments);
 
+        TextView CommentText = findViewById(R.id.comment_text);
+        TextView LocationText = findViewById(R.id.location_text);
         Button backButton = findViewById(R.id.back_button2);
         Button deleteButton = findViewById(R.id.delete_button);
         Intent intent = getIntent();
@@ -42,20 +46,23 @@ public class MyQRActivity extends AppCompatActivity {
         DocumentReference userDocRef = userCollection.document(username);
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 // Get the document with ID "some username" from the "username" collection
-//        qrCodesCollection.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    String  = document.getString("device");
-//                    if (device != null) {
-//                        if (device.equals(androidId)) {
-//                            setUsername1(document.getString("userNameKey"));
-//                        }
-//                    }
-//                    else{ // Handle errors
-//                        Log.d(TAG, "android id does not exist ", task.getException());
-//                    }
-//                }
-//            }});
+
+        qrCodesCollection.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String comment = document.getString("Comment");
+                            CommentText.setText("Comment: "+comment);
+                        }
+                        for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                            GeoPoint location = documentSnapshot.getGeoPoint("Location");
+                            double lat = location.getLatitude();
+                            double lng = location.getLongitude();
+                            String loc = lat + ", " + lng;
+                            LocationText.setText("Location: " +loc);
+                        }
+                    }
+                });
+
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -78,7 +78,7 @@ public class map extends AppCompatActivity {
                                 if (location != null) {
                                     double lat = location.getLatitude();
                                     double lng = location.getLongitude();
-                                    LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+                                    LatLng latLng = new LatLng(lat,lng);
                                     latLngList.add(latLng);
 
                                     // do something with the location
