@@ -196,6 +196,7 @@ public class Record_image extends AppCompatActivity {
                 Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Record_image.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -206,6 +207,7 @@ public class Record_image extends AppCompatActivity {
                 Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Record_image.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         AlertDialog dialog1 = builder.create();

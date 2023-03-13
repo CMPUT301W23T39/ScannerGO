@@ -88,6 +88,7 @@ public class ScanAction extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(ScanAction.this, MainActivity.class);
                     startActivity(intent);
+                    finish();
                 }
             });
 
@@ -193,6 +194,7 @@ public class ScanAction extends AppCompatActivity {
                                                         public void onClick(DialogInterface dialog, int id) {
                                                             Intent intent = new Intent(ScanAction.this, Record_image.class);
                                                             startActivity(intent);
+                                                            finish();
                                                         }
                                                     })
 
@@ -242,6 +244,7 @@ public class ScanAction extends AppCompatActivity {
                                 public void onClick(DialogInterface dialog, int id) {
                                     Intent intent = new Intent(ScanAction.this, Record_image.class);
                                     startActivity(intent);
+                                    finish();
                                 }
                             })
 
@@ -369,6 +372,7 @@ public class ScanAction extends AppCompatActivity {
                 Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ScanAction.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -379,6 +383,7 @@ public class ScanAction extends AppCompatActivity {
                 Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ScanAction.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         AlertDialog dialog1 = builder.create();
