@@ -19,6 +19,7 @@ import org.junit.runner.RunWith;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.intent.Intents.intending;
@@ -33,8 +34,6 @@ import static org.hamcrest.Matchers.allOf;
 @LargeTest
 public class LoginIntentTest {
 
-    private String mStringToBetyped;
-
     @Rule
     public IntentsTestRule<loginActivity> mActivityRule = new IntentsTestRule<>(
             loginActivity.class);
@@ -45,7 +44,7 @@ public class LoginIntentTest {
         onView(withId(R.id.usernameEditText))
                 .perform(typeText("12"));
         onView(withId(R.id.passwordEditText))
-                .perform(typeText("ddd"));
+                .perform(typeText("ddd")).perform(closeSoftKeyboard());
         onView(withId(R.id.loginButton)).perform(click());
 
         // Check that the MainActivity has been launched
