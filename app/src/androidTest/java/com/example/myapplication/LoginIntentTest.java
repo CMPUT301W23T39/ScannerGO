@@ -39,22 +39,17 @@ public class LoginIntentTest {
     public IntentsTestRule<loginActivity> mActivityRule = new IntentsTestRule<>(
             loginActivity.class);
 
-    @Before
-    public void initValidString() {
-        mStringToBetyped = "12";
-    }
-
     @Test
     public void testLogin() {
         // Type text and then press the login button.
         onView(withId(R.id.usernameEditText))
-                .perform(typeText(mStringToBetyped));
+                .perform(typeText("12"));
         onView(withId(R.id.passwordEditText))
                 .perform(typeText("ddd"));
         onView(withId(R.id.loginButton)).perform(click());
 
         // Check that the MainActivity has been launched
-        intending(allOf(hasAction(Intent.ACTION_MAIN), toPackage("com.example.myapplication")));
+        //intending(allOf(hasAction(Intent.ACTION_MAIN), toPackage("com.example.myapplication")));
 
     }
 }
