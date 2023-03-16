@@ -174,6 +174,43 @@ public class ScanAction extends AppCompatActivity {
                                             String message1 = "Waiting for recording...";
                                             Toast.makeText(ScanAction.this, message1, Toast.LENGTH_SHORT).show();
                                             if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                                                locationListener = new LocationListener() {
+                                                    @Override
+                                                    public void onLocationChanged(Location location) {
+                                                        QR_Latitude = location.getLatitude();
+                                                        QR_Longitude = location.getLongitude();
+                                                        locationManager.removeUpdates(this);
+                                                        User_UpdateGeolocation();
+                                                        UpdateGeolocation();
+
+                                                        String message2 = "Successfully recording location";
+                                                        Toast.makeText(ScanAction.this, message2, Toast.LENGTH_SHORT).show();
+
+                                                        AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+                                                        builder.setMessage("Do you want to record an image?")
+                                                                /**
+                                                                 * Recording location and Recording image
+                                                                 */
+                                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        Intent intent = new Intent(ScanAction.this, Record_image.class);
+                                                                        startActivity(intent);
+                                                                        finish();
+                                                                    }
+                                                                })
+
+                                                                /**
+                                                                 * Recording Location and Not recording image
+                                                                 */
+                                                                .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                                                    public void onClick(DialogInterface dialog, int id) {
+                                                                        Comment();
+                                                                    }
+                                                                });
+                                                        builder.create().show();
+                                                    }
+                                                };
                                                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
                                             }
                                         }
@@ -220,45 +257,6 @@ public class ScanAction extends AppCompatActivity {
                     mCodeScanner.startPreview();
                 }
             });
-
-            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            locationListener = new LocationListener() {
-                @Override
-                public void onLocationChanged(Location location) {
-                    QR_Latitude = location.getLatitude();
-                    QR_Longitude = location.getLongitude();
-                    locationManager.removeUpdates(this);
-
-                    User_UpdateGeolocation();
-                    UpdateGeolocation();
-
-                    String message2 = "Successfully recording location";
-                    Toast.makeText(ScanAction.this, message2, Toast.LENGTH_SHORT).show();
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
-                    builder.setMessage("Do you want to record an image?")
-                            /**
-                             * Recording location and Recording image
-                             */
-                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(ScanAction.this, Record_image.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            })
-
-                            /**
-                             * Recording Location and Not recording image
-                             */
-                            .setNeutralButton("No", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Comment();
-                                }
-                            });
-                    builder.create().show();
-                }
-            };
         }
 
 
