@@ -117,25 +117,31 @@ public class Record_image extends AppCompatActivity {
     }
 
     private void uploadImageToFirebase(String name, Uri contentUri) {
-        final StorageReference image = storageReference.child("Users/"+ ID + "/" + hash + "/" + name);
-        image.putFile(contentUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        Toast.makeText(Record_image.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
-                        Comment();
-                    }
-                });
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(Record_image.this, "Upload Failled.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), contentUri);
 
+            // Compress the bitmap to JPEG format with 80% quality and save to a byte array
+            ByteArrayOutputStream compress = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 50, compress);
+            //const compressedSize = compress.length;
+            byte[] data = compress.toByteArray();
+
+            final StorageReference image = storageReference.child("Users/" + ID + "/" + hash + "/" + name);
+            image.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    image.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            Toast.makeText(Record_image.this, "Image Is Uploaded.", Toast.LENGTH_SHORT).show();
+                            Comment();
+                        }
+                    });
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private String getFileExt(Uri contentUri) {
