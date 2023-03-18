@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -34,7 +33,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
-
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -48,7 +46,6 @@ public class Record_image extends AppCompatActivity {
     String currentPhotoPath, QR_Comment;
     StorageReference storageReference;
     String ID = loginActivity.username1;
-
     String hash = ScanAction.hash;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -167,7 +164,6 @@ public class Record_image extends AppCompatActivity {
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -201,7 +197,6 @@ public class Record_image extends AppCompatActivity {
                 Intent intent = new Intent(Record_image.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-
             }
         });
 
