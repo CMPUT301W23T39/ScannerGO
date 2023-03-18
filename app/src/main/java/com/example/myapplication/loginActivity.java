@@ -1,18 +1,16 @@
 package com.example.myapplication;
 
 import static android.content.ContentValues.TAG;
-import androidx.annotation.NonNull;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -22,25 +20,16 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-
-import com.google.android.gms.tasks.Task;
-//import com.google.api.core.ApiFuture;
-
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 
 
 public class loginActivity extends AppCompatActivity {
@@ -53,13 +42,6 @@ public class loginActivity extends AppCompatActivity {
     private Button loginbyDeviceButton;
     private FirebaseFirestore db;
 
-    public static String username1;
-    public String getUsername1(){
-        return username1;
-    }
-    public void setUsername1(String name){
-        username1 = name;
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,11 +91,10 @@ public class loginActivity extends AppCompatActivity {
                                 if (passwordFromDatabase.equals(password)) {
                                     // Password matches, so login
                                     String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-                                    setUsername1(username);
-                                    //System.out.println(getUsername1());
-                                    Task<Void> userRef = db.collection("username").document(username)
-                                            .update("device", androidId)
+                                    Map<String, Object> curidMap = new HashMap<>();
+                                    curidMap.put("device", androidId);
+                                    db.collection("device key").document(androidId)
+                                            .set(curidMap)
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
@@ -121,7 +102,6 @@ public class loginActivity extends AppCompatActivity {
                                                     Toast.makeText(getApplicationContext(), "AndroidID added successfully", Toast.LENGTH_SHORT).show();
                                                 }
                                             });
-
                                     Intent intent = new Intent(loginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                     finish();
@@ -156,32 +136,16 @@ public class loginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("username");
+                CollectionReference usersCollection = FirebaseFirestore.getInstance().collection("device key");
                 String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 // Create a query to retrieve the user document with the given username
-//                AtomicReference<String> username = new AtomicReference<>();
-//                AtomicReference<String> password = new AtomicReference<>();
-                usersCollection.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String device = document.getString("device");
-                            if (device != null) {
-                                if (device.equals(androidId)) {
-                                    setUsername1(document.getString("userNameKey"));
-                                }
-                            }
-                            else{ // Handle errors
-                                Log.d(TAG, "android id does not exist ", task.getException());
-                            }
-                        }
-                    }});
-//                  @Override public void onSuccess(Document
                 Query query = usersCollection.whereEqualTo("device", androidId);
+
 // Execute the query
-                query.get().addOnCompleteListener(task1 -> {
-                    if (task1.isSuccessful()) {
+                query.get().addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
                         // Check if the query returned any documents
-                        if (!task1.getResult().isEmpty()) {
+                        if (!task.getResult().isEmpty()) {
                             // Get the first document (assuming there is only one document with the given username)
                             //DocumentSnapshot document = task.getResult().getDocuments().get(0);
                             Intent intent = new Intent(loginActivity.this, MainActivity.class);
@@ -206,5 +170,4 @@ public class loginActivity extends AppCompatActivity {
         Intent intent = new Intent(this, SignupActivity.class);
         startActivity(intent);
     }
-
 }
