@@ -1,8 +1,11 @@
 package com.example.myapplication;
 
+import static android.content.ContentValues.TAG;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.accounts.Account;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -78,9 +81,7 @@ public class SignupActivity extends AppCompatActivity {
                                             // Code to run when the operation succeeds
                                             Log.d("RRG", "Document successfully written!");
                                             Toast.makeText(getApplicationContext(), "User information added successfully", Toast.LENGTH_SHORT).show();
-
                                             Intent intent = new Intent(SignupActivity.this, loginActivity.class);
-
                                             startActivity(intent);
                                             finish();
                                         }

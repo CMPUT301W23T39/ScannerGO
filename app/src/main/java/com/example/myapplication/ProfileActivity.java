@@ -36,7 +36,6 @@ public class ProfileActivity extends AppCompatActivity {
         TextView addressText = findViewById(R.id.address_text);
         TextView userText = findViewById(R.id.username_text);
         String username = loginActivity.username1;
-
         userText.setText(username);
 
         // Listen for real-time updates in the Firestore document

@@ -24,6 +24,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.type.LatLng;
 
 import org.w3c.dom.Text;
+
 public class MyQRActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,8 +40,8 @@ public class MyQRActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String QRCode = intent.getStringExtra("QRCode");
         QRCodeName.setText("Name: "+QRCode);
-        String username = loginActivity.username1;
 
+        String username = loginActivity.username1;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference userDocRef = userCollection.document(username);
@@ -86,7 +87,6 @@ public class MyQRActivity extends AppCompatActivity {
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
                                         Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
-
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
                                         finish();
