@@ -35,7 +35,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.Result;
 
@@ -48,7 +47,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.Manifest;
@@ -65,7 +63,6 @@ public class ScanAction extends AppCompatActivity {
     String QR_Names,QR_Visual,QR_Comment;
     double QR_Latitude, QR_Longitude;
     String ID = loginActivity.username1;
-
 
     public static String hash;
     public String getHash(){
@@ -92,7 +89,6 @@ public class ScanAction extends AppCompatActivity {
                     Intent intent = new Intent(ScanAction.this, MainActivity.class);
                     startActivity(intent);
                     finish();
-
                 }
             });
 
@@ -386,7 +382,6 @@ public class ScanAction extends AppCompatActivity {
                 Intent intent = new Intent(ScanAction.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-
             }
         });
         AlertDialog dialog1 = builder.create();
@@ -457,7 +452,6 @@ public class ScanAction extends AppCompatActivity {
                 }
             }
         }
-
     }
 
     public void Visual_System(String str){

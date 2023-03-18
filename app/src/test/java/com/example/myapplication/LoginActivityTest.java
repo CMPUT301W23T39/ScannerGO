@@ -103,7 +103,7 @@ public class LoginActivityTest {
         assertEquals("Wrong username or password. Please input again!", activity.getErrorMessage());
     }
 
-    private class LoginTestActivity extends LoginActivity {
+    private class LoginTestActivity extends loginActivity {
 
         private String usernameEditTextValue;
         private String passwordEditTextValue;
