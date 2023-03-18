@@ -56,26 +56,6 @@ public class FireBaseRankActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 
-
-
-//        qrCodesCollection.get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                for (QueryDocumentSnapshot document : task.getResult()) {
-//                    // Retrieve the "Score" field of each document in the subcollection
-//                    Integer score = document.getLong("Score").intValue();
-//                    scoresList.add(score);
-//                }
-//                // Use built-in Java methods to find the lowest and highest score
-//                int lowestScore = Collections.min(scoresList);
-//                int highestScore = Collections.max(scoresList);
-//                // Do something with the lowest and highest score
-//                System.out.println("Lowest score: " + lowestScore);
-//                System.out.println("Highest score: " + highestScore);
-//            } else {
-//                System.out.println("Error getting documents: " + task.getException());
-//            }
-//        });
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -85,6 +65,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Find the lowest and highest score
                 long lowestScore = Long.MAX_VALUE;
                 long highestScore = Long.MIN_VALUE;
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long score = snapshot.child("Score").getValue(Long.class);
                     if (score != null) {
@@ -133,6 +114,11 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Use built-in Java methods to find the lowest and highest score
                 int lowestScore = 0;
                 int highestScore = 0;
+                int totalScore = 0;
+                for (int i = 0; i < scoresList.size(); i++) {
+                    int current = scoresList.get(i);
+                    totalScore += current;
+                }
                 if (!scoresList.isEmpty()) {
                     lowestScore = Collections.min(scoresList);
                     highestScore = Collections.max(scoresList);
@@ -142,7 +128,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
                 highlowCode.setText("Highest QRcode Score: "+highestScore+"            "+"Lowest QRcode Score:"+lowestScore
-                +"\n" + "Total Amount of QRcode: " + size);
+                +"\n" + "Total Amount of QRcode: " + size+"            "+" Total Score of QRcode: "+totalScore);
 
             } else {
                 System.out.println("Error getting documents: " + task.getException());
