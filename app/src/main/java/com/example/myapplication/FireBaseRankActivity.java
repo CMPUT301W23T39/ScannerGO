@@ -56,7 +56,6 @@ public class FireBaseRankActivity extends AppCompatActivity {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 
-
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -66,6 +65,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Find the lowest and highest score
                 long lowestScore = Long.MAX_VALUE;
                 long highestScore = Long.MIN_VALUE;
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long score = snapshot.child("Score").getValue(Long.class);
                     if (score != null) {
@@ -93,20 +93,12 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     // Retrieve the "Name" field of each document in the subcollection
+
                     String name = document.getString("Name");
-                    String visual = document.getString("Visual");
-                    StringBuilder faceBuilder = new StringBuilder();
-                    char hands = visual.charAt(4);
-                    char ears = visual.charAt(1);
-                    char eyes = visual.charAt(0);
-                    char eyebrows = visual.charAt(2);
-                    char mouth = visual.charAt(3);
-                    char flower = visual.charAt(5);
-                    faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
-                    String face = faceBuilder.toString();
-                    qrCodesList.add(name+"\n"+face);
+                    qrCodesList.add(name + "\n");
 
                 }
                 adapter = new ArrayAdapter<>(FireBaseRankActivity.this, android.R.layout.simple_list_item_1, qrCodesList);
@@ -122,6 +114,11 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Use built-in Java methods to find the lowest and highest score
                 int lowestScore = 0;
                 int highestScore = 0;
+                int totalScore = 0;
+                for (int i = 0; i < scoresList.size(); i++) {
+                    int current = scoresList.get(i);
+                    totalScore += current;
+                }
                 if (!scoresList.isEmpty()) {
                     lowestScore = Collections.min(scoresList);
                     highestScore = Collections.max(scoresList);
@@ -130,8 +127,9 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
-                highlowCode.setText("Highest QRcode: "+highestScore+"            "+"Lowest QRcode:"+lowestScore
-                +"\n" + "Total: " + size);
+                System.out.println("totalScore: " + totalScore);
+                highlowCode.setText("Highest QRcode Score: "+highestScore+"            "+"Lowest QRcode Score:"+lowestScore
+                        +"\n" + "Total Amount of QRcode: " + size+"            "+" Total Score of QRcode: "+totalScore);
 
             } else {
                 System.out.println("Error getting documents: " + task.getException());
@@ -144,7 +142,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
                 String wholeQRCode = (String) parent.getItemAtPosition(position);
-               String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
                 intent.putExtra("QRCode", QRCode);
                 startActivity(intent);
             }
