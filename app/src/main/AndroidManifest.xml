@@ -67,6 +67,9 @@
         <activity
             android:name=".OtherUserQR">
         </activity>
+        <activity
+            android:name=".OtherQR">
+        </activity>
 
         <activity android:name=".loginActivity"
             android:exported="true">

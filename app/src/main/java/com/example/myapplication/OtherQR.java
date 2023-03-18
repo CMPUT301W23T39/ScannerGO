@@ -8,13 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.ImageView;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.ListResult;
-import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
-
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,15 +21,15 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.type.LatLng;
-
-import org.w3c.dom.Text;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.ListResult;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class MyQRActivity extends AppCompatActivity {
+public class OtherQR extends AppCompatActivity {
     String Hash;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,7 +47,7 @@ public class MyQRActivity extends AppCompatActivity {
         QRCodeName.setText("Name: "+QRCode);
 
         ImageView userImage = findViewById(R.id.loc_image);
-        String username = loginActivity.username1;
+        String username = intent.getStringExtra("username");
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference userDocRef = userCollection.document(username);
@@ -62,29 +57,30 @@ public class MyQRActivity extends AppCompatActivity {
 // Get the document with ID "some username" from the "username" collection
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (QRCode.equals(document.getString("Name"))) {
-                                String comment = document.getString("Comment");
-                                CommentText.setText("Comment: " + comment);
-                                Long score = document.getLong("Point");
-                                ScoreText.setText("Score: " + score);
-                                GeoPoint location = document.getGeoPoint("Location");
-                                double lat = location.getLatitude();
-                                double lng = location.getLongitude();
-                                String loc = lat + ", " + lng;
-                                LocationText.setText("Location: " + loc);
-                                Hash = document.getString("HASH");
-                                loadImage(username,userImage);
-                            }
-                        }
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    if (QRCode.equals(document.getString("Name"))) {
+                        String comment = document.getString("Comment");
+                        CommentText.setText("Comment: " + comment);
+                        Long score = document.getLong("Point");
+                        ScoreText.setText("Score: " + score);
+                        GeoPoint location = document.getGeoPoint("Location");
+                        double lat = location.getLatitude();
+                        double lng = location.getLongitude();
+                        String loc = lat + ", " + lng;
+                        LocationText.setText("Location: " + loc);
+                        Hash = document.getString("HASH");
+                        loadImage(username,userImage);
                     }
-                });
+                }
+            }
+        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
+                Intent intent = new Intent(OtherQR.this, OtherUserQR.class);
+                intent.putExtra("username", username);
                 startActivity(intent);
                 finish();
             }
@@ -101,7 +97,7 @@ public class MyQRActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                        Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
+                                        Intent intent = new Intent(OtherQR.this, FireBaseRankActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
                                         finish();
@@ -169,5 +165,4 @@ public class MyQRActivity extends AppCompatActivity {
         }
         return lastJpgRef;
     }
-
 }
