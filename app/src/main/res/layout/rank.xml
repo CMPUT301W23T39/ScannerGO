@@ -7,29 +7,22 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/back_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="BACK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="321dp" />
-
     <ListView
         android:id="@+id/rank_list"
         android:layout_width="match_parent"
-        android:layout_height="392dp"
-        android:layout_weight="1">
+        android:layout_height="wrap_content"/>
 
-    </ListView>
+
+    <Button
+        android:id="@+id/back_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Back" />
+
     <Button
         android:id="@+id/firebase_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FIREBASE LIST"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/firebase_button" />
+        android:text="Personal List" />
 
 </LinearLayout>
