@@ -1,17 +1,12 @@
 package com.example.myapplication;
 
 import static android.content.ContentValues.TAG;
-import androidx.annotation.NonNull;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
-
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
-import android.util.Base64;
 
 import android.util.Log;
 import android.view.View;
@@ -20,7 +15,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import com.google.android.gms.tasks.Task;
@@ -33,14 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 
-import java.security.KeyPair;
-import java.security.KeyPairGenerator;
-import java.util.HashMap;
-import java.util.Map;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.concurrent.atomic.AtomicReference;
-
 
 
 public class loginActivity extends AppCompatActivity {

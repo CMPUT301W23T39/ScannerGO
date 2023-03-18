@@ -72,6 +72,8 @@ public class ScanAction extends AppCompatActivity {
         hash = name;
     }
 
+    private static final String SEED = "SEED";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +116,7 @@ public class ScanAction extends AppCompatActivity {
                                  * 256 HASH
                                  */
                                 MessageDigest md = MessageDigest.getInstance("SHA-256");
-                                byte[] hash = md.digest(result.getText().getBytes(StandardCharsets.UTF_8));
+                                byte[] hash = md.digest((result.getText() + SEED).getBytes(StandardCharsets.UTF_8));
                                 for (byte b : hash) {
                                     HASH.append(String.format("%02x", b));
                                 }
