@@ -139,27 +139,30 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 highlowCode.setText("Highest QRcode Score: "+highestScore+"            "+"Lowest QRcode Score:"+lowestScore
                         +"\n" + "Total Amount of QRcode: " + size+"            "+" Total Score of QRcode: "+totalScore);
 
+                userDocRef.update("totalScore", totalScore)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                // Update successful
+                                Log.d(TAG, "Total score updated successfully!");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Handle errors
+                                Log.w(TAG, "Error updating total score", e);
+                            }
+                        });
+
             } else {
                 System.out.println("Error getting documents: " + task.getException());
             }
 
         });
 
-        userDocRef.update("totalScore", totalScore)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // Update successful
-                        Log.d(TAG, "Total score updated successfully!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle errors
-                        Log.w(TAG, "Error updating total score", e);
-                    }
-                });
+
 
         rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
