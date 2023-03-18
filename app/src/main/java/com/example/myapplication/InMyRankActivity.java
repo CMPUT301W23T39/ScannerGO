@@ -27,47 +27,33 @@ import java.util.ArrayList;
 
 public class InMyRankActivity extends AppCompatActivity {
     private ArrayAdapter<String> adapter;
-    public String currUsername = loginActivity.username1;
-    private ListView mHighScoresListView;
+    public String curUsername = loginActivity.username1;
+
+
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.rank);
-        mHighScoresListView = findViewById(R.id.rank_list);
+        ListView mHighScoresListView = findViewById(R.id.rank_list);
 
         Button backButton = findViewById(R.id.back_button);
         Button firebaseButton = findViewById(R.id.firebase_button);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        // Retrieve the high score for the current player
-        DocumentReference userDocRef = db.collection("username").document(currUsername);
-        userDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        // Query the high scores collection and retrieve the scores that match the current user's username
+        CollectionReference playersRef = db.collection("username");
+        Query playersQuery = playersRef.orderBy("totalScore", Query.Direction.DESCENDING).limit(10);
+        playersQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                Long scoreObj = documentSnapshot.getLong("score");
-                int score = scoreObj != null ? scoreObj.intValue() : 0;
-
-                // Query the high scores collection and retrieve the top 10 high scores
-                CollectionReference highScoresRef = db.collection("highScores");
-                Query highScoresQuery = highScoresRef.orderBy("score", Query.Direction.DESCENDING).limit(10);
-                highScoresQuery.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        ArrayList<String> highScoresList = new ArrayList<>();
-                        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
-                            String playerId = documentSnapshot.getString("username");
-                            int score = documentSnapshot.getLong("score").intValue();
-                            highScoresList.add(playerId + " - " + score);
-                        }
-                        adapter = new ArrayAdapter<>(InMyRankActivity.this, android.R.layout.simple_list_item_1, highScoresList);
-                        mHighScoresListView.setAdapter(adapter);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        // Handle failure
-                    }
-                });
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                ArrayList<String> highScoresList = new ArrayList<>();
+                for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                    String username = documentSnapshot.getString("userNameKey");
+                    int score = documentSnapshot.getLong("totalScore").intValue();
+                    highScoresList.add(username + " - " + score);
+                }
+                adapter = new ArrayAdapter<>(InMyRankActivity.this, android.R.layout.simple_list_item_1, highScoresList);
+                mHighScoresListView.setAdapter(adapter);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -75,9 +61,6 @@ public class InMyRankActivity extends AppCompatActivity {
                 // Handle failure
             }
         });
-
-
-
 
 
         backButton.setOnClickListener(new View.OnClickListener() {
@@ -100,7 +83,6 @@ public class InMyRankActivity extends AppCompatActivity {
 
     }
 }
-
 
 
 
