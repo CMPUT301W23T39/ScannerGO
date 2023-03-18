@@ -33,6 +33,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
     public String currUsername = loginActivity.username1;
+    String Hash;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -107,6 +108,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                     faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
                     String face = faceBuilder.toString();
                     qrCodesList.add(name+"\n"+face);
+                    Hash = document.getString("HASH");
 
                 }
                 adapter = new ArrayAdapter<>(FireBaseRankActivity.this, android.R.layout.simple_list_item_1, qrCodesList);
@@ -144,8 +146,9 @@ public class FireBaseRankActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
                 String wholeQRCode = (String) parent.getItemAtPosition(position);
-               String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
                 intent.putExtra("QRCode", QRCode);
+                intent.putExtra("Hash",Hash);
                 startActivity(intent);
             }
         });

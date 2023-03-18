@@ -26,6 +26,7 @@ import com.google.type.LatLng;
 import org.w3c.dom.Text;
 
 public class MyQRActivity extends AppCompatActivity {
+    String sameu = "Usernames with same QR Code: ";
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +36,14 @@ public class MyQRActivity extends AppCompatActivity {
         TextView CommentText = findViewById(R.id.comment_text);
         TextView LocationText = findViewById(R.id.location_text);
         TextView ScoreText = findViewById(R.id.score);
+        TextView SameUsersText = findViewById(R.id.sameUsers);
         Button backButton = findViewById(R.id.back_button2);
         Button deleteButton = findViewById(R.id.delete_button);
         Intent intent = getIntent();
         String QRCode = intent.getStringExtra("QRCode");
+        String Hash = intent.getStringExtra("Hash");
         QRCodeName.setText("Name: "+QRCode);
+
 
         String username = loginActivity.username1;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -65,6 +69,19 @@ public class MyQRActivity extends AppCompatActivity {
                         }
                     }
                 });
+        CollectionReference qrCollection = db.collection("QR Codes");
+        DocumentReference qrDocRef = qrCollection.document(Hash);
+        CollectionReference SameUserCollection = qrDocRef.collection("users");
+
+        SameUserCollection.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+
+                    if (!username.equals(document.getString("ID"))) {
+                        sameu += "\n"+document.getString("ID");
+                        SameUsersText.setText(sameu);
+                    }
+                }}});
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override

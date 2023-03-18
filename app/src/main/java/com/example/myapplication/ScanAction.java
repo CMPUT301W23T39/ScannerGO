@@ -328,6 +328,7 @@ public class ScanAction extends AppCompatActivity {
         data.put("Comment", QR_Comment);
         data.put("Location", location);
         data.put("Visual", QR_Visual);
+        data.put("HASH", String.valueOf(HASH));
         HashDoc.set(data);
     }
 
