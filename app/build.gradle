@@ -40,7 +40,7 @@ dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.6.0'
     implementation 'androidx.test:core:1.5.0'
-    implementation fileTree(dir: 'C:\\Users\\bonni\\AppData\\Local\\Android\\Sdk\\platforms\\android-33', include: ['*.aar', '*.jar'], exclude: [])
+    //implementation fileTree(dir: 'C:\\Users\\bonni\\AppData\\Local\\Android\\Sdk\\platforms\\android-33', include: ['*.aar', '*.jar'], exclude: [])
     implementation 'androidx.test.espresso:espresso-intents:3.5.1'
     implementation 'androidx.navigation:navigation-fragment:2.5.3'
     implementation 'androidx.navigation:navigation-ui:2.5.3'
