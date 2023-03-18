@@ -1,6 +1,7 @@
 package com.example.myapplication;
 
 import android.content.Intent;
+import android.hardware.camera2.TotalCaptureResult;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -127,6 +128,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
+                System.out.println("totalScore: " + totalScore);
                 highlowCode.setText("Highest QRcode Score: "+highestScore+"            "+"Lowest QRcode Score:"+lowestScore
                 +"\n" + "Total Amount of QRcode: " + size+"            "+" Total Score of QRcode: "+totalScore);
 
@@ -141,7 +143,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
                 String wholeQRCode = (String) parent.getItemAtPosition(position);
-               String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
                 intent.putExtra("QRCode", QRCode);
                 startActivity(intent);
             }
