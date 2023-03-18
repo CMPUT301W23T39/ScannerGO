@@ -34,14 +34,13 @@ public class OtherQR extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.myqr);
+        setContentView(R.layout.other_qr);
         TextView QRCodeName = findViewById(R.id.qrcode_name);
 
         TextView CommentText = findViewById(R.id.comment_text);
         TextView LocationText = findViewById(R.id.location_text);
         TextView ScoreText = findViewById(R.id.score);
         Button backButton = findViewById(R.id.back_button2);
-        Button deleteButton = findViewById(R.id.delete_button);
         Intent intent = getIntent();
         String QRCode = intent.getStringExtra("QRCode");
         QRCodeName.setText("Name: "+QRCode);
@@ -83,37 +82,6 @@ public class OtherQR extends AppCompatActivity {
                 intent.putExtra("username", username);
                 startActivity(intent);
                 finish();
-            }
-        });
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                qrCodesCollection.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String name = document.getString("Name");
-                            if (name.equals(QRCode)) {
-                                document.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                        Intent intent = new Intent(OtherQR.this, FireBaseRankActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG, "Error deleting document", e);
-                                    }
-                                });
-                            }
-                        }
-                    } else {
-                        System.out.println("Error getting documents: " + task.getException());
-                    }
-                });
             }
         });
 
