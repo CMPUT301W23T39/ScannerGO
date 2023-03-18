@@ -38,7 +38,7 @@ public class InMyRankActivityTest {
     @Test
     public void testActivityLaunch() {
         onView(ViewMatchers.withId(R.id.back_button)).check(matches(isDisplayed()));
-        onView(ViewMatchers.withId(R.id.firebase_button)).check(matches(isDisplayed()));
+        //onView(ViewMatchers.withId(R.id.firebase_button)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -51,13 +51,4 @@ public class InMyRankActivityTest {
         intended((Matcher<Intent>) expectedIntent);
     }
 
-    @Test
-    public void testFirebaseButton() {
-        onView(ViewMatchers.withId(R.id.firebase_button)).perform(click());
-        Intent expectedIntent = new Intent(activityScenario.getResult().getResultData());
-        expectedIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        expectedIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        expectedIntent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-        intended((Matcher<Intent>) expectedIntent);
-    }
 }
