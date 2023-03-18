@@ -75,6 +75,7 @@ public class OtherUserProfile extends AppCompatActivity {
                 Intent intent = new Intent(OtherUserProfile.this, OtherUserQR.class);
                 intent.putExtra("username", username);
                 startActivity(intent);
+                finish();
             }
         });
     }
