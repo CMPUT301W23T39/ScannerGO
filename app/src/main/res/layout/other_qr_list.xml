@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity">
-    
+
     <ListView
         android:id="@+id/rank_list"
         android:layout_width="match_parent"
@@ -15,12 +15,6 @@
 
     </ListView>
 
-    <TextView
-        android:id="@+id/highlow_code"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:text="Highest QRcode:            Lowest QRcode:" />
 
     <Button
         android:id="@+id/back_button"

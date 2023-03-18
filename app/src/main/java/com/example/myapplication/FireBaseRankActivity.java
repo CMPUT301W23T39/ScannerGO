@@ -150,7 +150,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FireBaseRankActivity.this, InMyRankActivity.class);
+                Intent intent = new Intent(FireBaseRankActivity.this, InMyAccountActivity.class);
                 startActivity(intent);
             }
         });

@@ -77,9 +77,6 @@ public class InMyRankActivity extends AppCompatActivity {
         });
 
 
-
-
-
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,6 +85,7 @@ public class InMyRankActivity extends AppCompatActivity {
                 finish();
             }
         });
+
 
         firebaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
