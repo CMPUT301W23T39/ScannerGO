@@ -49,27 +49,27 @@ public class MyQRActivity extends AppCompatActivity {
 // Get the document with ID "some username" from the "username" collection
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            if (QRCode.equals(document.getString("Name"))) {
-                                String comment = document.getString("Comment");
-                                CommentText.setText("Comment: " + comment);
-                                Long score = document.getLong("Point");
-                                ScoreText.setText("Score: " + score);
-                                GeoPoint location = document.getGeoPoint("Location");
-                                double lat = location.getLatitude();
-                                double lng = location.getLongitude();
-                                String loc = lat + ", " + lng;
-                                LocationText.setText("Location: " + loc);
-                            }
-                        }
+            if (task.isSuccessful()) {
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    if (QRCode.equals(document.getString("Name"))) {
+                        String comment = document.getString("Comment");
+                        CommentText.setText("Comment: " + comment);
+                        Long score = document.getLong("Point");
+                        ScoreText.setText("Score: " + score);
+                        GeoPoint location = document.getGeoPoint("Location");
+                        double lat = location.getLatitude();
+                        double lng = location.getLongitude();
+                        String loc = lat + ", " + lng;
+                        LocationText.setText("Location: " + loc);
                     }
-                });
+                }
+            }
+        });
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyQRActivity.this, QRListActivity.class);
+                Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -86,7 +86,7 @@ public class MyQRActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                        Intent intent = new Intent(MyQRActivity.this, QRListActivity.class);
+                                        Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
                                         finish();
