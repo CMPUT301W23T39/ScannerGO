@@ -23,6 +23,6 @@
         android:id="@+id/firebase_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Firebase List" />
+        android:text="Personal List" />
 
 </LinearLayout>
