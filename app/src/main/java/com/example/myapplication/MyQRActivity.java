@@ -3,11 +3,17 @@ package com.example.myapplication;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ImageView;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
+
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,11 +47,31 @@ public class MyQRActivity extends AppCompatActivity {
         String QRCode = intent.getStringExtra("QRCode");
         QRCodeName.setText("Name: "+QRCode);
 
+        ImageView userImage = findViewById(R.id.loc_image);
         String username = loginActivity.username1;
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference userDocRef = userCollection.document(username);
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
+        private void loadImage(String username, ImageView imageView) {
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference();
+            StorageReference userImageRef = storageReference.child("images/" + username + "/image.jpg");
+
+            userImageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    // Use Picasso to load the image into the ImageView
+                    Picasso.get().load(uri).into(imageView);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e("MyQRActivity", "Failed to load image from Firebase Storage", e);
+                }
+            });
+        }
+
 // Get the document with ID "some username" from the "username" collection
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
