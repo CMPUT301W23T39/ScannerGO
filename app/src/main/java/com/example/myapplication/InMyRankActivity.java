@@ -40,7 +40,7 @@ public class InMyRankActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Retrieve the high score for the current player
-        DocumentReference userDocRef = db.collection("users").document(currUsername);
+        DocumentReference userDocRef = db.collection("username").document(currUsername);
         userDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {

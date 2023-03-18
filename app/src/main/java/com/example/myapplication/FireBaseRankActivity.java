@@ -1,7 +1,11 @@
 package com.example.myapplication;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +19,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.InMyAccountActivity;
 import com.example.myapplication.MyQRActivity;
 import com.example.myapplication.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +39,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
     public String currUsername = loginActivity.username1;
+    int totalScore = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
         CollectionReference userCollection = db.collection("username");
 
         DocumentReference userDocRef = userCollection.document(currUsername);
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 
@@ -114,7 +122,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Use built-in Java methods to find the lowest and highest score
                 int lowestScore = 0;
                 int highestScore = 0;
-                int totalScore = 0;
+
                 for (int i = 0; i < scoresList.size(); i++) {
                     int current = scoresList.get(i);
                     totalScore += current;
@@ -134,8 +142,24 @@ public class FireBaseRankActivity extends AppCompatActivity {
             } else {
                 System.out.println("Error getting documents: " + task.getException());
             }
+
         });
 
+        userDocRef.update("totalScore", totalScore)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // Update successful
+                        Log.d(TAG, "Total score updated successfully!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Handle errors
+                        Log.w(TAG, "Error updating total score", e);
+                    }
+                });
 
         rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
