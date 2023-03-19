@@ -69,7 +69,7 @@ public class MyQRActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
+                Intent intent = new Intent(MyQRActivity.this, QRListActivity.class);
                 startActivity(intent);
                 finish();
             }
@@ -86,7 +86,7 @@ public class MyQRActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
-                                        Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
+                                        Intent intent = new Intent(MyQRActivity.this, QRListActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
                                         finish();

@@ -122,7 +122,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Use built-in Java methods to find the lowest and highest score
                 int lowestScore = 0;
                 int highestScore = 0;
-
+                int AverageScore = 0;
                 for (int i = 0; i < scoresList.size(); i++) {
                     int current = scoresList.get(i);
                     totalScore += current;
@@ -132,12 +132,13 @@ public class FireBaseRankActivity extends AppCompatActivity {
                     highestScore = Collections.max(scoresList);
                 }
                 int size = scoresList.size();
+                AverageScore = totalScore/size;
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
                 System.out.println("totalScore: " + totalScore);
-                highlowCode.setText("Highest QRcode Score: "+highestScore+"            "+"Lowest QRcode Score:"+lowestScore
-                        +"\n" + "Total Amount of QRcode: " + size+"            "+" Total Score of QRcode: "+totalScore);
+                highlowCode.setText("Your Highest QRcode Score: "+highestScore+"\n"+"Your Lowest QRcode Score: "+lowestScore
+                        +"\n"+"Your Average Score: "+ AverageScore +"\n"+"Your Total Amount of QRcode: " + size+"\n"+"Your Total Score of QRcode: "+totalScore);
 
                 userDocRef.update("totalScore", totalScore)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -164,16 +165,16 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
 
 
-        rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
-                String wholeQRCode = (String) parent.getItemAtPosition(position);
-                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
-                intent.putExtra("QRCode", QRCode);
-                startActivity(intent);
-            }
-        });
+//        rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
+//                String wholeQRCode = (String) parent.getItemAtPosition(position);
+//                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+//                intent.putExtra("QRCode", QRCode);
+//                startActivity(intent);
+//            }
+//        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
