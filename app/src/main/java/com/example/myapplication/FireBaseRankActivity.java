@@ -133,12 +133,15 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 }
                 int size = scoresList.size();
                 AverageScore = totalScore/size;
+
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
                 System.out.println("totalScore: " + totalScore);
+
+
                 highlowCode.setText("Your Highest QRcode Score: "+highestScore+"\n"+"Your Lowest QRcode Score: "+lowestScore
-                        +"\n"+"Your Average Score: "+ AverageScore +"\n"+"Your Total Amount of QRcode: " + size+"\n"+"Your Total Score of QRcode: "+totalScore);
+                        +"\n"+"Your Average Score: "+ AverageScore +"\n"+"Total Amount of QRcode You Have Scanned: " + size+"\n"+"Total Score of Your QRcode: "+totalScore);
 
                 userDocRef.update("totalScore", totalScore)
                         .addOnSuccessListener(new OnSuccessListener<Void>() {
