@@ -36,7 +36,6 @@ public class InMyRankActivity extends AppCompatActivity {
         mHighScoresListView = findViewById(R.id.rank_list);
 
         Button backButton = findViewById(R.id.back_button);
-        Button firebaseButton = findViewById(R.id.firebase_button);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Retrieve the high score for the current player
@@ -81,16 +80,6 @@ public class InMyRankActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(InMyRankActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
-
-        firebaseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(InMyRankActivity.this, FireBaseRankActivity.class);
                 startActivity(intent);
                 finish();
             }

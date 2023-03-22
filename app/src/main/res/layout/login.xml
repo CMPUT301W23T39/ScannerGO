@@ -41,22 +41,15 @@
         android:layout_below="@+id/passwordEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"/>
-    <Button
-        android:id="@+id/signupButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Sign Up"
-        android:layout_below="@+id/loginButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"/>
-    <Button
-        android:id="@+id/loginByDeviceButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Login by Local Device"
-        android:layout_below="@+id/signupButton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"/>
+<!--    <Button-->
+<!--        android:id="@+id/signupButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Sign Up"-->
+<!--        android:layout_below="@+id/loginButton"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="40dp"/>-->
+
 
     <TextView
         android:id="@+id/errorMessageTextView"
