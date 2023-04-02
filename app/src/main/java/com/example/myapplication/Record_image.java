@@ -39,7 +39,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Record_image extends AppCompatActivity {
+
+
     public static final int CAMERA_REQUEST_CODE = 100;
+
+
+
     public static final int GALLERY_REQUEST_CODE = 105;
     ImageView selectedImage;
     Button cameraBtn,galleryBtn,CancelBtn;
@@ -191,6 +196,7 @@ public class Record_image extends AppCompatActivity {
 
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
             // Create the File where the photo should go
             File photoFile = null;
             try {
@@ -222,8 +228,11 @@ public class Record_image extends AppCompatActivity {
                 String message = "QR Code has been saved";
                 Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Record_image.this, MainActivity.class);
-                startActivity(intent);
+
+
                 finish();
+
+
             }
         });
 
@@ -234,7 +243,11 @@ public class Record_image extends AppCompatActivity {
                 Toast.makeText(Record_image.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Record_image.this, MainActivity.class);
                 startActivity(intent);
+
+
                 finish();
+
+
             }
         });
         AlertDialog dialog1 = builder.create();

@@ -89,8 +89,10 @@ public class loginActivity extends AppCompatActivity {
                                 // Get the first document (assuming there is only one document with the given username)
                                 DocumentSnapshot document = task.getResult().getDocuments().get(0);
 
+                              //  Log.e("Location1111111",document.toString());
                                 // Get the password field from the document
                                 String passwordFromDatabase = document.getString("passwordKey");
+
 
                                 // Check if the password matches
                                 if (passwordFromDatabase.equals(password)) {
