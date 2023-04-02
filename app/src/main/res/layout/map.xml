@@ -6,12 +6,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-
     <fragment
+        android:id="@+id/google_map"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/google_map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"/>
+
+        />
+
+    <LinearLayout
+        android:id="@+id/input_layout_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp">
+    <EditText
+        android:id="@+id/search_input_player"
+        android:layout_width="wrap_content"
+        android:maxLines="1"
+        android:layout_marginLeft="10dp"
+        android:layout_weight="1"
+        android:layout_height="57dp"
+        android:textColor="#000000"
+        android:textColorHint="#435BB5"
+        android:hint="Enter the player name" />
+        <Button
+            android:id="@+id/search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="search"
+            android:layout_marginRight="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/input_layout_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp">
+        <Button
+            android:id="@+id/button5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5km">
+
+        </Button>
+        <Button
+            android:id="@+id/button10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="10km">
+
+        </Button>
+        <Button
+            android:id="@+id/button20"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20km">
+
+        </Button>
+    </LinearLayout>
+
     <Button
         android:id="@+id/backFromMap"
         android:layout_width="wrap_content"

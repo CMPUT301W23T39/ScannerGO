@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+
+import android.content.Intent;
+import android.os.Bundle;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
@@ -19,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.InMyAccountActivity;
 import com.example.myapplication.MyQRActivity;
 import com.example.myapplication.R;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
@@ -39,7 +43,9 @@ public class FireBaseRankActivity extends AppCompatActivity {
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
     public String currUsername = loginActivity.username1;
+
     int totalScore = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +69,8 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
+
+
 
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -104,9 +112,18 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     // Retrieve the "Name" field of each document in the subcollection
-
                     String name = document.getString("Name");
-                    qrCodesList.add(name + "\n");
+                    String visual = document.getString("Visual");
+                    StringBuilder faceBuilder = new StringBuilder();
+                    char hands = visual.charAt(4);
+                    char ears = visual.charAt(1);
+                    char eyes = visual.charAt(0);
+                    char eyebrows = visual.charAt(2);
+                    char mouth = visual.charAt(3);
+                    char flower = visual.charAt(5);
+                    faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
+                    String face = faceBuilder.toString();
+                    qrCodesList.add(name+"\n"+face);
 
                 }
                 adapter = new ArrayAdapter<>(FireBaseRankActivity.this, android.R.layout.simple_list_item_1, qrCodesList);
@@ -122,43 +139,18 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Use built-in Java methods to find the lowest and highest score
                 int lowestScore = 0;
                 int highestScore = 0;
-                int AverageScore = 0;
-                for (int i = 0; i < scoresList.size(); i++) {
-                    int current = scoresList.get(i);
-                    totalScore += current;
-                }
                 if (!scoresList.isEmpty()) {
                     lowestScore = Collections.min(scoresList);
                     highestScore = Collections.max(scoresList);
                 }
                 int size = scoresList.size();
-                AverageScore = totalScore/size;
 
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
-                System.out.println("totalScore: " + totalScore);
+                highlowCode.setText("Highest QRcode: "+highestScore+"            "+"Lowest QRcode:"+lowestScore
+                +"\n" + "Total: " + size);
 
-
-                highlowCode.setText("Your Highest QRcode Score: "+highestScore+"\n"+"Your Lowest QRcode Score: "+lowestScore
-                        +"\n"+"Your Average Score: "+ AverageScore +"\n"+"Total Amount of QRcode You Have Scanned: " + size+"\n"+"Total Score of Your QRcode: "+totalScore);
-
-                userDocRef.update("totalScore", totalScore)
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                // Update successful
-                                Log.d(TAG, "Total score updated successfully!");
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                // Handle errors
-                                Log.w(TAG, "Error updating total score", e);
-                            }
-                        });
 
             } else {
                 System.out.println("Error getting documents: " + task.getException());
@@ -167,21 +159,21 @@ public class FireBaseRankActivity extends AppCompatActivity {
         });
 
 
-
-//        rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
-//                String wholeQRCode = (String) parent.getItemAtPosition(position);
-//                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
-//                intent.putExtra("QRCode", QRCode);
-//                startActivity(intent);
-//            }
-//        });
+        rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
+                String wholeQRCode = (String) parent.getItemAtPosition(position);
+               String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+                intent.putExtra("QRCode", QRCode);
+                startActivity(intent);
+            }
+        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FireBaseRankActivity.this, InMyRankActivity.class);
+                Intent intent = new Intent(FireBaseRankActivity.this, InMyAccountActivity.class);
+
                 startActivity(intent);
             }
         });
@@ -198,3 +190,4 @@ public class FireBaseRankActivity extends AppCompatActivity {
     }
 
 }
+
