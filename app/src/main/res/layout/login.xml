@@ -22,23 +22,23 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"/>
 
-    <EditText
-        android:id="@+id/passwordEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        android:inputType="textPassword"
-        android:layout_below="@+id/usernameEditText"
-        android:layout_marginTop="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"/>
+<!--    <EditText-->
+<!--        android:id="@+id/passwordEditText"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:hint="Password"-->
+<!--        android:inputType="textPassword"-->
+<!--        android:layout_below="@+id/usernameEditText"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:layout_marginLeft="30dp"-->
+<!--        android:layout_marginRight="30dp"/>-->
 
     <Button
         android:id="@+id/loginButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login"
-        android:layout_below="@+id/passwordEditText"
+        android:layout_below="@+id/usernameEditText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"/>
 <!--    <Button-->
