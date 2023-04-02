@@ -7,9 +7,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+
+import android.content.Intent;
+
 import android.location.Location;
 import android.Manifest;
 
@@ -29,10 +33,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import android.widget.Button;
+
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -65,6 +73,7 @@ public class map extends AppCompatActivity {
     SupportMapFragment supportMapFragment;
     FusedLocationProviderClient client;
     GoogleMap googleMap;
+
     private EditText search_input_player;
     private Button back, search;
     ArrayList<LatLng> latLngList = new ArrayList<>();  // Declare latLngList as a member variable
@@ -74,11 +83,13 @@ public class map extends AppCompatActivity {
 
     private Button button5,button10,button20;
     @SuppressLint("MissingInflatedId")
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
         back = findViewById(R.id.backFromMap);
+
         button5 = findViewById(R.id.button5);
         button10 = findViewById(R.id.button10);
         button20 = findViewById(R.id.button20);
@@ -96,6 +107,7 @@ public class map extends AppCompatActivity {
         }
         getUserLocation();
         getDistanceUserLocation2();
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,7 +117,8 @@ public class map extends AppCompatActivity {
             }
         });
 
-        //去搜索
+
+        
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -149,9 +162,11 @@ public class map extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("username");
 
+
         qrCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot qrDoc : task.getResult()) {
+
 
                     Map<String, Object> user = qrDoc.getData();
 
@@ -266,6 +281,7 @@ public class map extends AppCompatActivity {
 
                     }
                 }
+
 
             } else {
                 Log.d(TAG, "Error getting QR codes: ", task.getException());
@@ -407,6 +423,7 @@ public class map extends AppCompatActivity {
     }
 private double currentLatitude,currentLongitude;
 
+
     private void getCurrentLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -422,6 +439,7 @@ private double currentLatitude,currentLongitude;
                         @Override
                         public void onMapReady(@NonNull GoogleMap googleMap) {
                             map.this.googleMap = googleMap;
+
                             currentLatitude=location.getLatitude();
                             currentLongitude=location.getLongitude();
                             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
@@ -431,6 +449,7 @@ private double currentLatitude,currentLongitude;
                            Marker marker= googleMap.addMarker(options);
                                     marker.setIcon(BitmapDescriptorFactory.fromBitmap(BitmapFactory.decodeResource(getResources(), R.drawable.currentlocation_icon)));
                             marker.showInfoWindow();
+
                         }
                     });
                 }

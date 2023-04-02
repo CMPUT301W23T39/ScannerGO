@@ -49,6 +49,7 @@ public class MyQRActivity extends AppCompatActivity {
 // Get the document with ID "some username" from the "username" collection
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
+
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (QRCode.equals(document.getString("Name"))) {
@@ -65,6 +66,7 @@ public class MyQRActivity extends AppCompatActivity {
                         }
                     }
                 });
+
 
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +88,9 @@ public class MyQRActivity extends AppCompatActivity {
                                     @Override
                                     public void onSuccess(Void aVoid) {
                                         Log.d(TAG, "DocumentSnapshot successfully deleted!");
+
                                         Intent intent = new Intent(MyQRActivity.this, FireBaseRankActivity.class);
+
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                         startActivity(intent);
                                         finish();

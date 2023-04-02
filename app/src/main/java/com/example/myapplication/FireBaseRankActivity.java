@@ -1,7 +1,14 @@
 package com.example.myapplication;
 
+
 import android.content.Intent;
 import android.os.Bundle;
+import static android.content.ContentValues.TAG;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,6 +22,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.InMyAccountActivity;
 import com.example.myapplication.MyQRActivity;
 import com.example.myapplication.R;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,6 +43,9 @@ public class FireBaseRankActivity extends AppCompatActivity {
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
     public String currUsername = loginActivity.username1;
+
+    int totalScore = 0;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,8 +66,10 @@ public class FireBaseRankActivity extends AppCompatActivity {
         CollectionReference userCollection = db.collection("username");
 
         DocumentReference userDocRef = userCollection.document(currUsername);
+
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
+
 
 
         ref.addValueEventListener(new ValueEventListener() {
@@ -66,6 +81,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Find the lowest and highest score
                 long lowestScore = Long.MAX_VALUE;
                 long highestScore = Long.MIN_VALUE;
+
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long score = snapshot.child("Score").getValue(Long.class);
                     if (score != null) {
@@ -93,6 +109,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     // Retrieve the "Name" field of each document in the subcollection
                     String name = document.getString("Name");
@@ -127,15 +144,18 @@ public class FireBaseRankActivity extends AppCompatActivity {
                     highestScore = Collections.max(scoresList);
                 }
                 int size = scoresList.size();
+
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
                 highlowCode.setText("Highest QRcode: "+highestScore+"            "+"Lowest QRcode:"+lowestScore
                 +"\n" + "Total: " + size);
 
+
             } else {
                 System.out.println("Error getting documents: " + task.getException());
             }
+
         });
 
 
@@ -153,6 +173,7 @@ public class FireBaseRankActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(FireBaseRankActivity.this, InMyAccountActivity.class);
+
                 startActivity(intent);
             }
         });
@@ -169,3 +190,4 @@ public class FireBaseRankActivity extends AppCompatActivity {
     }
 
 }
+
