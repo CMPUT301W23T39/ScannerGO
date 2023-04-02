@@ -22,11 +22,19 @@
         android:layout_weight="1"
         android:text="Count:  Total:  Highest:  Lowest:  " />
 
+<!--    <Button-->
+<!--        android:id="@+id/button7"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="3dp"-->
+<!--        android:layout_weight="1"-->
+<!--        android:text="Back" />-->
     <Button
         android:id="@+id/button7"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_weight="1"
-        android:text="Back" />
+        android:layout_height="wrap_content"
+        android:text="Back"
+        android:layout_below="@+id/textView3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"/>
 
 </LinearLayout>

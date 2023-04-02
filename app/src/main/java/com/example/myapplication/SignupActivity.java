@@ -19,8 +19,10 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,41 +58,47 @@ public class SignupActivity extends AppCompatActivity {
                 String password = mPasswordEditText.getText().toString();
                 String password2 = mConfirmPasswordEditText.getText().toString();
                 Map<String, Object> curUserMap = new HashMap<>();
+                db.collection("username");
+                CollectionReference usersCollection = db.collection("username");
 
+                Query query = usersCollection.whereEqualTo("userNameKey", name);
+                query.get().addOnCompleteListener(task -> {
+                    if (!task.getResult().isEmpty()) {
+                        // Check if the query returned any documents
+                        Toast.makeText(getApplicationContext(), "Username already exists. Please choose a different username.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        if (password2.equals(password)) {
+                            curUserMap.put("userNameKey", name);
+                            curUserMap.put("passwordKey", password);
+                            // Create a new account with the given details
 
-                if (password2.equals(password)) {
-                    curUserMap.put("userNameKey", name);
-                    curUserMap.put("passwordKey", password);
-                    // Create a new account with the given details
-                    //Account account = new Account(name, password);
-
-                    // Store the account details in a local database or in the cloud ekxww9yWbT19GDfhUQLX
-                    db.collection("username").document(name)
-                            .set(curUserMap)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    // Code to run when the operation succeeds
-                                    Log.d("RRG", "Document successfully written!");
-                                    Toast.makeText(getApplicationContext(), "User information added successfully", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(SignupActivity.this, loginActivity.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    // Code to run when the operation fails
-                                    Log.d("RRG", "Error adding account");
-                                    Toast.makeText(getApplicationContext(), "Failed to add user information", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                }
-
-                else{
-                    errorMessageTextView.setText("Please make sure the two passwords are identical");
-                }
+                            // Store the account details in a local database or in the cloud ekxww9yWbT19GDfhUQLX
+                            db.collection("username").document(name)
+                                    .set(curUserMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            // Code to run when the operation succeeds
+                                            Log.d("RRG", "Document successfully written!");
+                                            Toast.makeText(getApplicationContext(), "User information added successfully", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(SignupActivity.this, loginActivity.class);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            // Code to run when the operation fails
+                                            Log.d("RRG", "Error adding account");
+                                            Toast.makeText(getApplicationContext(), "Failed to add user information", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        } else {
+                            errorMessageTextView.setText("Please make sure the two passwords are identical");
+                        }
+                    }
+                });
             }
         });
     }
