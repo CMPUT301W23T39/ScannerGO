@@ -169,6 +169,16 @@ public class FireBaseRankActivity extends AppCompatActivity {
 
 
 
+//        rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
+//                String wholeQRCode = (String) parent.getItemAtPosition(position);
+//                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+//                intent.putExtra("QRCode", QRCode);
+//                startActivity(intent);
+//            }
+//        });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
