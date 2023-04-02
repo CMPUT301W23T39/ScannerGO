@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 
 
+
 import android.util.Log;
 
 import android.view.View;
@@ -74,6 +75,8 @@ public class ScanAction extends AppCompatActivity {
         hash = name;
     }
 
+    private static final String SEED = "SEED";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,7 +119,7 @@ public class ScanAction extends AppCompatActivity {
                                  * 256 HASH
                                  */
                                 MessageDigest md = MessageDigest.getInstance("SHA-256");
-                                byte[] hash = md.digest(result.getText().getBytes(StandardCharsets.UTF_8));
+                                byte[] hash = md.digest((result.getText() + SEED).getBytes(StandardCharsets.UTF_8));
                                 for (byte b : hash) {
                                     HASH.append(String.format("%02x", b));
                                 }
@@ -236,6 +239,7 @@ public class ScanAction extends AppCompatActivity {
 
                                                             finish();
 
+
                                                         }
                                                     })
 
@@ -261,6 +265,7 @@ public class ScanAction extends AppCompatActivity {
                     mCodeScanner.startPreview();
                 }
             });
+
         }
 
 
@@ -457,6 +462,7 @@ public class ScanAction extends AppCompatActivity {
                     counter++;
                 }
             }
+
         }
 
 
@@ -489,6 +495,7 @@ public class ScanAction extends AppCompatActivity {
                                         // Create a new document for user 1234
                                         Map<String, Object> userData = new HashMap<>();
                                         userData.put("Location", new GeoPoint(QR_Latitude, QR_Longitude));
+                                        userData.put("ID", ID);
                                         usersCollection.document(ID).set(userData);
                                     }
                                 }
@@ -526,6 +533,7 @@ public class ScanAction extends AppCompatActivity {
         data.put("Comment", QR_Comment);
         data.put("Location", location);
         data.put("Visual", QR_Visual);
+        data.put("HASH", String.valueOf(HASH));
         HashDoc.set(data);
     }
 
@@ -570,6 +578,7 @@ public class ScanAction extends AppCompatActivity {
                 Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ScanAction.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 
@@ -580,17 +589,18 @@ public class ScanAction extends AppCompatActivity {
                 Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(ScanAction.this, MainActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
         AlertDialog dialog1 = builder.create();
         dialog1.show();
     }
 
-    public void Name_System(String str){
+    public void Name_System(String str) {
         String[] name1 = {"Cool ", "Hot "};
         String[] name2 = {"Fro", "Glo"};
         String[] name3 = {"Mo", "Lo"};
-        String[] name4= {"Mega", "Ultra"};
+        String[] name4 = {"Mega", "Ultra"};
         String[] name5 = {"Spectral", "Sonic"};
         String[] name6 = {"Shark", "Crab"};
 
@@ -607,6 +617,50 @@ public class ScanAction extends AppCompatActivity {
             }
         }
         QR_Names = QR_Names.substring(4);
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference qrCollection = db.collection("QR Codes");
+
+        int counter = 1;
+        while (true) {
+            String nameToCheck = QR_Names + (counter > 1 ? " " + counter : "");
+            Query query = qrCollection.whereEqualTo("Name", nameToCheck);
+            Task<QuerySnapshot> querySnapshotTask = query.get();
+            while (!querySnapshotTask.isSuccessful()) {
+                // Handle errors
+            }
+            QuerySnapshot querySnapshot = querySnapshotTask.getResult();
+            if (querySnapshot.isEmpty()) {
+                // No existing documents with the same name found, break the loop
+                QR_Names = nameToCheck;
+                break;
+            } else {
+                boolean foundMatchingDocument = false;
+                for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                    String documentId = document.getId();
+                    CollectionReference collection = qrCollection.document(documentId).collection("users");
+                    Query subQuery = collection.whereEqualTo("ID", ID);
+                    Task<QuerySnapshot> subQuerySnapshotTask = subQuery.get();
+                    while (!subQuerySnapshotTask.isSuccessful()) {
+                        // Handle errors
+                    }
+                    QuerySnapshot subQuerySnapshot = subQuerySnapshotTask.getResult();
+                    if (!subQuerySnapshot.isEmpty()) {
+                        foundMatchingDocument = true;
+                        break;
+                    }
+                }
+                if (!foundMatchingDocument) {
+                    // No existing documents with the same name and collection with ID = 2 found, break the loop
+                    QR_Names = nameToCheck;
+                    break;
+                } else {
+                    // Increment the counter
+                    counter++;
+                }
+            }
+        }
 
     }
 

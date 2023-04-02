@@ -1,14 +1,7 @@
 package com.example.myapplication;
 
-
 import android.content.Intent;
 import android.os.Bundle;
-import static android.content.ContentValues.TAG;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,9 +15,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.myapplication.InMyAccountActivity;
 import com.example.myapplication.MyQRActivity;
 import com.example.myapplication.R;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,22 +28,18 @@ import com.google.firebase.database.DataSnapshot;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class FireBaseRankActivity extends AppCompatActivity {
+public class OtherUserQR extends AppCompatActivity {
 
     // Declare the adapter as a global variable
     private ArrayAdapter<String> adapter;
-    public String currUsername = loginActivity.username1;
-    String Hash;
-
-    int totalScore = 0;
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.firebase_rank);
 
-
+        Intent intent = getIntent();
+        String currUsername = intent.getStringExtra("username");
         ListView rankList = findViewById(R.id.rank_list);
         Button backButton = findViewById(R.id.back_button);
         TextView highlowCode = findViewById(R.id.highlow_code);
@@ -62,12 +48,10 @@ public class FireBaseRankActivity extends AppCompatActivity {
         ArrayList<Integer> scoresList = new ArrayList<>();
 
 
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
 
         DocumentReference userDocRef = userCollection.document(currUsername);
-
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("QR Codes");
         CollectionReference qrCodesCollection = userDocRef.collection("QR Codes");
 
@@ -81,7 +65,6 @@ public class FireBaseRankActivity extends AppCompatActivity {
                 // Find the lowest and highest score
                 long lowestScore = Long.MAX_VALUE;
                 long highestScore = Long.MIN_VALUE;
-
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Long score = snapshot.child("Score").getValue(Long.class);
                     if (score != null) {
@@ -106,7 +89,6 @@ public class FireBaseRankActivity extends AppCompatActivity {
         });
 
 
-
         qrCodesCollection.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 for (QueryDocumentSnapshot document : task.getResult()) {
@@ -122,12 +104,10 @@ public class FireBaseRankActivity extends AppCompatActivity {
                     char flower = visual.charAt(5);
                     faceBuilder.append(hands).append(ears).append('(').append(eyebrows).append(eyes).append(mouth).append(eyes).append(eyebrows).append(')').append(flower).append(ears).append(hands);
                     String face = faceBuilder.toString();
-                    qrCodesList.add(name+"\n"+face);
-
-                    Hash = document.getString("HASH");
+                    qrCodesList.add(name + "\n" + face);
 
                 }
-                adapter = new ArrayAdapter<>(FireBaseRankActivity.this, android.R.layout.simple_list_item_1, qrCodesList);
+                adapter = new ArrayAdapter<>(OtherUserQR.this, android.R.layout.simple_list_item_1, qrCodesList);
                 rankList.setAdapter(adapter);
                 // Do something with the ArrayList of names
                 System.out.println(qrCodesList);
@@ -145,51 +125,40 @@ public class FireBaseRankActivity extends AppCompatActivity {
                     highestScore = Collections.max(scoresList);
                 }
                 int size = scoresList.size();
-
                 // Do something with the lowest and highest score
                 System.out.println("Lowest score: " + lowestScore);
                 System.out.println("Highest score: " + highestScore);
-                highlowCode.setText("Highest QRcode: "+highestScore+"            "+"Lowest QRcode:"+lowestScore
-                +"\n" + "Total: " + size);
-
+                highlowCode.setText("Highest QRcode: " + highestScore + "            " + "Lowest QRcode:" + lowestScore
+                        + "\n" + "Total: " + size);
 
             } else {
                 System.out.println("Error getting documents: " + task.getException());
             }
-
         });
 
 
         rankList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(FireBaseRankActivity.this, MyQRActivity.class);
+                Intent intent = new Intent(OtherUserQR.this, OtherQR.class);
                 String wholeQRCode = (String) parent.getItemAtPosition(position);
-                String QRCode = wholeQRCode.substring(0,wholeQRCode.indexOf("\n"));
+                String QRCode = wholeQRCode.substring(0, wholeQRCode.indexOf("\n"));
+                intent.putExtra("username",currUsername);
                 intent.putExtra("QRCode", QRCode);
-                intent.putExtra("Hash",Hash);
                 startActivity(intent);
+                finish();
             }
         });
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(FireBaseRankActivity.this, InMyAccountActivity.class);
-
+                Intent intent = new Intent(OtherUserQR.this, OtherUserProfile.class);
+                intent.putExtra("username",currUsername);
                 startActivity(intent);
+                finish();
             }
         });
 
 
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // Notify the adapter that the data has changed only if it is not null
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-        }
-    }
-
 }
-
