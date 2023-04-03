@@ -35,7 +35,7 @@ public class InMyAccountActivity extends AppCompatActivity {
         QRListButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(InMyAccountActivity.this,FireBaseRankActivity.class);
+                Intent intent = new Intent(InMyAccountActivity.this,QRListActivity.class);
                 startActivity(intent);
                 finish();
             }
