@@ -7,32 +7,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-<<<<<<< Updated upstream
-    <ListView
-        android:id="@+id/QRCODE_list"
-        android:layout_width="match_parent"
-        android:layout_height="583dp"
-        android:layout_weight="1">
-
-    </ListView>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Count:  Total:  Highest:  Lowest:  " />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_weight="1"
-        android:text="Back" />
-=======
-
-
-
+    
     <Button
         android:id="@+id/back_button"
         android:layout_width="wrap_content"
@@ -45,25 +20,25 @@
         android:id="@+id/textView13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player with highest Score:" />
+        android:text="QRcode with highest Score:   Hot GloMoMegaSpectralCrab(31)" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player Gender:" />
+        android:text="QRcode with lowest Score:   Hot GloMoMegaSpectralCrab(24)" />
 
     <TextView
         android:id="@+id/textView14"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player Id:" />
+        android:text="QRcode Id:   None" />
 
     <TextView
         android:id="@+id/textView15"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player History QRcode Record:" />
+        android:text="Player History QRcode Record:   2" />
 
     <TextView
         android:id="@+id/textView16"
@@ -135,12 +110,6 @@
         android:text="                                              Player10" />
 
     <TextView
-        android:id="@+id/textView28"
-        android:layout_width="match_parent"
-        android:layout_height="104dp"
-        android:text="" />
-
-    <TextView
         android:id="@+id/textView29"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -149,14 +118,13 @@
         android:id="@+id/textView30"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode score in total:" />
+        android:text="QRcode score in total:   55" />
 
     <TextView
         android:id="@+id/textView31"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="QRcode score in average:" />
+        android:text="QRcode score in average:   28" />
 
->>>>>>> Stashed changes
 
 </LinearLayout>
