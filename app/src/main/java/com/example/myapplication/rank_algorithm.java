@@ -12,7 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
-public class rank_algorithm extends AppCompatActivity {
+public class
+rank_algorithm extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,14 +36,6 @@ public class rank_algorithm extends AppCompatActivity {
                 //startActivity(intent);
             }
         });
-        //backButton.setOnClickListener(new View.OnClickListener() {
-            //@Override
-//            public void onClick(View v) {
-//                    Intent intent = new Intent(RANKACTIVITY.this, InMyAccountActivity.class);
-//                startActivity(intent);
-//                finish();
-//            }
-//        });
         Intent intent = getIntent();
         String deleteItem = intent.getStringExtra("DeleteCode");
         int pos = adapter.getPosition(deleteItem);

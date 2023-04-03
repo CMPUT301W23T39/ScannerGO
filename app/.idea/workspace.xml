@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="NONE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="eae360b0-2a13-4151-b40e-5be8c4c92cc0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../.idea/androidTestResultsUserPreferences.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/deploymentTargetDropDown.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../.idea/inspectionProfiles/Project_Default.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/FireBaseRankActivityTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/LoginIntentTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/MapTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/ProfileTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/ScanActionTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/SignupActivityTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/FireBaseRankActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/Record_image.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/Utils/CountDistanceUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/map.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/black_qrcode.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/currentlocation_icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/designatedspot.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/distance_qr_code.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/red_qrcode.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/drawable/userlocation_icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/firebase_rank.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/game_level_rank.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/layout/recording_image.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/res/xml/file_paths.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/ExampleInstrumentedTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/androidTest/java/com/example/myapplication/ExampleInstrumentedTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/InMyAccountActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/InMyAccountActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/InMyRankActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/InMyRankActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/MyQRActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/MyQRActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/ProfileActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/ProfileActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/QRListActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/QRListActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/ScanAction.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/ScanAction.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/SignupActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/SignupActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/loginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/loginActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/mapactivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/mapactivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/rank_algorithm.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/myapplication/rank_algorithm.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/myapplication/scan.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/login.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/map.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/map.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/my_account.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/my_account.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/myqr.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/myqr.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/profile.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/profile.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/qr_list.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/qr_list.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/rank.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/rank.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/scanned_information.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/layout/signup.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/layout/signup.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/res/values/themes.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/res/values/themes.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/example/myapplication/ExampleUnitTest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/../build.gradle" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2Mt6IDg64GIzzeBC7UQoO6eKdS0" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="eae360b0-2a13-4151-b40e-5be8c4c92cc0" name="Changes" comment="" />
+      <created>1678574453622</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1678574453622</updated>
+    </task>
+    <servers />
+  </component>
+</project>

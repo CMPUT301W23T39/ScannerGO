@@ -7,156 +7,22 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-<<<<<<< Updated upstream
     <ListView
-        android:id="@+id/QRCODE_list"
+        android:id="@+id/rank_list"
         android:layout_width="match_parent"
-        android:layout_height="583dp"
-        android:layout_weight="1">
-
-    </ListView>
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:text="Count:  Total:  Highest:  Lowest:  " />
-
-    <Button
-        android:id="@+id/button7"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:layout_weight="1"
-        android:text="Back" />
-=======
-
+        android:layout_height="wrap_content"/>
 
 
     <Button
         android:id="@+id/back_button"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="BACK"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="321dp" />
+        android:text="Back" />
 
-    <TextView
-        android:id="@+id/textView13"
+    <Button
+        android:id="@+id/firebase_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Player with highest Score:" />
-
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Player Gender:" />
-
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Player Id:" />
-
-    <TextView
-        android:id="@+id/textView15"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Player History QRcode Record:" />
-
-    <TextView
-        android:id="@+id/textView16"
-        android:layout_width="match_parent"
-        android:layout_height="92dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/textView17"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Rank List:" />
-
-    <TextView
-        android:id="@+id/textView18"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player1" />
-
-    <TextView
-        android:id="@+id/textView19"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player2" />
-
-    <TextView
-        android:id="@+id/textView20"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player3" />
-
-    <TextView
-        android:id="@+id/textView21"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player4" />
-
-    <TextView
-        android:id="@+id/textView22"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player5" />
-
-    <TextView
-        android:id="@+id/textView23"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player6" />
-
-    <TextView
-        android:id="@+id/textView24"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player7" />
-    <TextView
-        android:id="@+id/textView25"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player8"  />
-    <TextView
-        android:id="@+id/textView26"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player9" />
-    <TextView
-        android:id="@+id/textView27"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="                                              Player10" />
-
-    <TextView
-        android:id="@+id/textView28"
-        android:layout_width="match_parent"
-        android:layout_height="104dp"
-        android:text="" />
-
-    <TextView
-        android:id="@+id/textView29"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Summary:" />
-    <TextView
-        android:id="@+id/textView30"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="QRcode score in total:" />
-
-    <TextView
-        android:id="@+id/textView31"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="QRcode score in average:" />
-
->>>>>>> Stashed changes
+        android:text="Update Your Score" />
 
 </LinearLayout>

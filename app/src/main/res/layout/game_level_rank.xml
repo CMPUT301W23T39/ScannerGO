@@ -8,17 +8,17 @@
     tools:context=".MainActivity">
 
     <ListView
-        android:id="@+id/qr_list"
+        android:id="@+id/rank_list"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="392dp"
         android:layout_weight="1">
 
     </ListView>
 
     <Button
-        android:id="@+id/back_button4"
+        android:id="@+id/back_button"
         android:layout_width="match_parent"
-        android:layout_height="3dp"
+        android:layout_height="4dp"
         android:layout_weight="1"
         android:text="Back" />
 
