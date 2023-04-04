@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             }
-            });
+        });
 
         mapButton.setOnClickListener(new View.OnClickListener() {
             @Override

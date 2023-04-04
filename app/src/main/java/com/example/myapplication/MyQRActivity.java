@@ -65,7 +65,6 @@ public class MyQRActivity extends AppCompatActivity {
 // Get the document with ID "some username" from the "username" collection
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
-
                     if (task.isSuccessful()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             if (QRCode.equals(document.getString("Name"))) {

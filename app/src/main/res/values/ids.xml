@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="rankButton" type="id" />
+    <item name="firebase_button" type="id" />
+    <item name="loc_image" type="id" />
 </resources>

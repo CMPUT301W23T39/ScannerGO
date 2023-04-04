@@ -95,4 +95,3 @@ public class InMyRankActivity extends AppCompatActivity {
 
 
 
-

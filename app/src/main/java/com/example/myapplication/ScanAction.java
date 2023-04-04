@@ -63,15 +63,17 @@ public class ScanAction extends AppCompatActivity {
 
     StringBuilder HASH = new StringBuilder();
     int QR_Point;
-    String QR_Names,QR_Visual,QR_Comment;
+    String QR_Names, QR_Visual, QR_Comment;
     double QR_Latitude, QR_Longitude;
     String ID = loginActivity.username1;
 
     public static String hash;
-    public String getHash(){
+
+    public String getHash() {
         return hash;
     }
-    public void setHash(String name){
+
+    public void setHash(String name) {
         hash = name;
     }
 
@@ -88,14 +90,14 @@ public class ScanAction extends AppCompatActivity {
          * back button
          */
         Button back = findViewById(R.id.scan_back);
-            back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(ScanAction.this, MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                }
-            });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ScanAction.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         /**
          * Ask permission
@@ -123,97 +125,105 @@ public class ScanAction extends AppCompatActivity {
                                 for (byte b : hash) {
                                     HASH.append(String.format("%02x", b));
                                 }
-                                setHash(String.valueOf(HASH));
-                                /**
-                                 * Number of repeats
-                                 */
-                                Pattern pattern = Pattern.compile("([\\da-f])\\1+");
-                                Matcher matcher = pattern.matcher(HASH);
-
-                                /**
-                                 * Get the score
-                                 */
-                                while (matcher.find()) {
-                                    int base = 0;
-                                    String repeat = matcher.group();
-                                    if (Character.isDigit(repeat.charAt(0))) {
-                                        base = repeat.charAt(0) - '0'; //get int.
-                                    } else {
-                                        base = (int) repeat.charAt(0) - 'a' + 10; //alphabet to int, for example a = 10.
-                                    }
-                                    int exponent = repeat.length() - 1; // exponent for "b" repeats
-                                    int score = (int) Math.pow(base, exponent); // calculate output value
-                                    QR_Point += score;
-                                }
-
-
-                            } catch (NoSuchAlgorithmException e) {
-                                String message = "SHA-256 algorithm not found";
-                                Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
+                                int exponent = repeat.length() - 1; // exponent for "b" repeats
+                                int score = (int) Math.pow(base, exponent); // calculate output value
+                                QR_Point += score;
                             }
 
-                            String hashPrefix = HASH.substring(0, 6);
-                            Name_System(hashPrefix);
-                            Visual_System(hashPrefix);
 
-                            UpdateToUsers();
-                            InitializeFireBase();
+                        } catch (NoSuchAlgorithmException e) {
+                            String message = "SHA-256 algorithm not found";
+                            Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
+                        }
 
-                            /**
-                             * Pop up screens to ask user whether want to record location/image and leave comment
-                             */
-                            AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
-                            builder.setMessage("Do you want to record the location?")
+                        String hashPrefix = HASH.substring(0, 6);
+                        Name_System(hashPrefix);
+                        Visual_System(hashPrefix);
 
-                                    /**
-                                     * Recording location
-                                     */
-                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                                                    != PackageManager.PERMISSION_GRANTED) {
-                                                ActivityCompat.requestPermissions(ScanAction.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                                                        100);
-                                            }
-                                            //record location
-                                            String message1 = "Waiting for recording...";
-                                            Toast.makeText(ScanAction.this, message1, Toast.LENGTH_SHORT).show();
-                                            if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                                                locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                                                locationListener = new LocationListener() {
-                                                    @Override
-                                                    public void onLocationChanged(Location location) {
-                                                        QR_Latitude = location.getLatitude();
-                                                        QR_Longitude = location.getLongitude();
-                                                        locationManager.removeUpdates(this);
-                                                        User_UpdateGeolocation();
-                                                        UpdateGeolocation();
+                        UpdateToUsers();
+                        InitializeFireBase();
 
-                                                        String message2 = "Successfully recording location";
-                                                        Toast.makeText(ScanAction.this, message2, Toast.LENGTH_SHORT).show();
+                        /**
+                         * Pop up screens to ask user whether want to record location/image and leave comment
+                         */
+                        AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+                        builder.setMessage("Do you want to record the location?")
 
-                                                        AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
-                                                        builder.setMessage("Do you want to record an image?")
-                                                                /**
-                                                                 * Recording location and Recording image
-                                                                 */
-                                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                        Intent intent = new Intent(ScanAction.this, Record_image.class);
-                                                                        startActivity(intent);
-                                                                        finish();
-                                                                    }
-                                                                })
+                                /**
+                                 * Recording location
+                                 */
+                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                                                != PackageManager.PERMISSION_GRANTED) {
+                                            ActivityCompat.requestPermissions(ScanAction.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                                    100);
+                                        }
+                                        //record location
+                                        String message1 = "Waiting for recording...";
+                                        Toast.makeText(ScanAction.this, message1, Toast.LENGTH_SHORT).show();
+                                        if (ContextCompat.checkSelfPermission(ScanAction.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                                            locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                                            locationListener = new LocationListener() {
+                                                @Override
+                                                public void onLocationChanged(Location location) {
+                                                    QR_Latitude = location.getLatitude();
+                                                    QR_Longitude = location.getLongitude();
+                                                    locationManager.removeUpdates(this);
+                                                    User_UpdateGeolocation();
+                                                    UpdateGeolocation();
 
-                                                                /**
-                                                                 * Recording Location and Not recording image
-                                                                 */
-                                                                .setNeutralButton("No", new DialogInterface.OnClickListener() {
-                                                                    public void onClick(DialogInterface dialog, int id) {
-                                                                        Comment();
-                                                                    }
-                                                                });
-                                                        builder.create().show();
+                                                    String message2 = "Successfully recording location";
+                                                    Toast.makeText(ScanAction.this, message2, Toast.LENGTH_SHORT).show();
+
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+                                                    builder.setMessage("Do you want to record an image?")
+                                                            /**
+                                                             * Recording location and Recording image
+                                                             */
+                                                            .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    Intent intent = new Intent(ScanAction.this, Record_image.class);
+                                                                    startActivity(intent);
+                                                                    finish();
+                                                                }
+                                                            })
+
+                                                            /**
+                                                             * Recording Location and Not recording image
+                                                             */
+                                                            .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    Comment();
+                                                                }
+                                                            });
+                                                    builder.create().show();
+                                                }
+                                            };
+                                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                                        }
+                                    }
+                                })
+
+                                /**
+                                 * Not recording location
+                                 */
+                                .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+                                        builder.setMessage("Do you want to record an image?")
+
+                                                /**
+                                                 * Not recording location and Recording image
+                                                 */
+                                                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        Intent intent = new Intent(ScanAction.this, Record_image.class);
+                                                        startActivity(intent);
+
+                                                        finish();
+
+
                                                     }
                                                 };
                                                 locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
@@ -268,10 +278,11 @@ public class ScanAction extends AppCompatActivity {
 
         }
 
+    }
 
 
     //Initialize QR Code FireBase
-    public void  InitializeFireBase(){
+    public void InitializeFireBase() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
         Query query = qrCollection.whereEqualTo("Name", String.valueOf(HASH));
@@ -311,7 +322,7 @@ public class ScanAction extends AppCompatActivity {
         });
     }
 
-    public void  UpdateGeolocation(){
+    public void UpdateGeolocation() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
         DocumentReference qrHashDoc = qrCollection.document(String.valueOf(HASH));
@@ -324,7 +335,7 @@ public class ScanAction extends AppCompatActivity {
         });
     }
 
-    public void  UpdateToUsers(){
+    public void UpdateToUsers() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference document = userCollection.document(ID);
@@ -340,7 +351,7 @@ public class ScanAction extends AppCompatActivity {
         HashDoc.set(data);
     }
 
-    public void  User_UpdateGeolocation(){
+    public void User_UpdateGeolocation() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference document = userCollection.document(ID);
@@ -353,7 +364,7 @@ public class ScanAction extends AppCompatActivity {
         });
     }
 
-    public void  User_UpdateComment(){
+    public void User_UpdateComment() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference document = userCollection.document(ID);
@@ -366,7 +377,7 @@ public class ScanAction extends AppCompatActivity {
         });
     }
 
-    public void Comment(){
+    public void Comment() {
         AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
         builder.setTitle("Enter comments");
         builder.setMessage("Please enter your comments:");
@@ -466,38 +477,39 @@ public class ScanAction extends AppCompatActivity {
         }
     }
 
-    public void Visual_System(String str){
-        String[] eye = {"^", "0"};
-        String[] ear = {"3", "@"};
-        String[] Eyebrow = {"-", "~"};
-        String[] mouse = {"v", "-"};
-        String[] hand = {"/", "d"};
-        String[] flower = {"*", " "};
 
-        for (int i = 0; i < 6 && i < str.length(); i++) {
-            String[] currentArray;
-            char currentChar = str.charAt(i);
+        public void Visual_System (String str){
+            String[] eye = {"^", "0"};
+            String[] ear = {"3", "@"};
+            String[] Eyebrow = {"-", "~"};
+            String[] mouse = {"v", "-"};
+            String[] hand = {"/", "d"};
+            String[] flower = {"*", " "};
 
-            if (Character.isLetter(currentChar)) {
-                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
-                QR_Visual += currentArray[0];
-            } else if (Character.isDigit(currentChar)) {
-                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
-                QR_Visual += currentArray[1];
+            for (int i = 0; i < 6 && i < str.length(); i++) {
+                String[] currentArray;
+                char currentChar = str.charAt(i);
+
+                if (Character.isLetter(currentChar)) {
+                    currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
+                    QR_Visual += currentArray[0];
+                } else if (Character.isDigit(currentChar)) {
+                    currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
+                    QR_Visual += currentArray[1];
+                }
             }
+            QR_Visual = QR_Visual.substring(4);
         }
-        QR_Visual = QR_Visual.substring(4);
-    }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mCodeScanner.startPreview();
-    }
+        @Override
+        protected void onResume () {
+            super.onResume();
+            mCodeScanner.startPreview();
+        }
 
-    @Override
-    protected void onPause() {
-        mCodeScanner.releaseResources();
-        super.onPause();
+        @Override
+        protected void onPause () {
+            mCodeScanner.releaseResources();
+            super.onPause();
+        }
     }
-}
