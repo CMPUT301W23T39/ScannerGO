@@ -1,6 +1,4 @@
 package com.example.myapplication;
-
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,22 +8,15 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-
-
-
 import android.util.Log;
-
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
 import com.budiyev.android.codescanner.CodeScanner;
 import com.budiyev.android.codescanner.CodeScannerView;
 import com.budiyev.android.codescanner.DecodeCallback;
@@ -40,12 +31,10 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.zxing.Result;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
-
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -53,39 +42,30 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.Manifest;
-
 public class ScanAction extends AppCompatActivity {
-
     private CodeScanner mCodeScanner;
     private LocationManager locationManager;
     private LocationListener locationListener;
     private FirebaseFirestore db;
-
     StringBuilder HASH = new StringBuilder();
     int QR_Point;
-    String QR_Names, QR_Visual, QR_Comment;
+    String QR_Names,QR_Visual,QR_Comment;
     double QR_Latitude, QR_Longitude;
     String ID = loginActivity.username1;
-
     public static String hash;
-
-    public String getHash() {
+    public String getHash(){
         return hash;
     }
-
-    public void setHash(String name) {
+    public void setHash(String name){
         hash = name;
     }
-
     private static final String SEED = "SEED";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.scanner);
         CodeScannerView scannerView = findViewById(R.id.scanner_view);
         mCodeScanner = new CodeScanner(this, scannerView);
-
         /**
          * back button
          */
@@ -98,7 +78,6 @@ public class ScanAction extends AppCompatActivity {
                 finish();
             }
         });
-
         /**
          * Ask permission
          */
@@ -108,47 +87,57 @@ public class ScanAction extends AppCompatActivity {
                     Manifest.permission.CAMERA
             }, 100);
         }
-            mCodeScanner.setDecodeCallback(new DecodeCallback() {
-                @Override
-                public void onDecoded(@NonNull final Result result) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            onPause();
-
-                            try {
-                                /**
-                                 * 256 HASH
-                                 */
-                                MessageDigest md = MessageDigest.getInstance("SHA-256");
-                                byte[] hash = md.digest((result.getText() + SEED).getBytes(StandardCharsets.UTF_8));
-                                for (byte b : hash) {
-                                    HASH.append(String.format("%02x", b));
+        mCodeScanner.setDecodeCallback(new DecodeCallback() {
+            @Override
+            public void onDecoded(@NonNull final Result result) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        onPause();
+                        try {
+                            /**
+                             * 256 HASH
+                             */
+                            MessageDigest md = MessageDigest.getInstance("SHA-256");
+                            byte[] hash = md.digest((result.getText() + SEED).getBytes(StandardCharsets.UTF_8));
+                            for (byte b : hash) {
+                                HASH.append(String.format("%02x", b));
+                            }
+                            setHash(String.valueOf(HASH));
+                            /**
+                             * Number of repeats
+                             */
+                            Pattern pattern = Pattern.compile("([\\da-f])\\1+");
+                            Matcher matcher = pattern.matcher(HASH);
+                            /**
+                             * Get the score
+                             */
+                            while (matcher.find()) {
+                                int base = 0;
+                                String repeat = matcher.group();
+                                if (Character.isDigit(repeat.charAt(0))) {
+                                    base = repeat.charAt(0) - '0'; //get int.
+                                } else {
+                                    base = (int) repeat.charAt(0) - 'a' + 10; //alphabet to int, for example a = 10.
                                 }
                                 int exponent = repeat.length() - 1; // exponent for "b" repeats
                                 int score = (int) Math.pow(base, exponent); // calculate output value
                                 QR_Point += score;
                             }
-
-
                         } catch (NoSuchAlgorithmException e) {
                             String message = "SHA-256 algorithm not found";
                             Toast.makeText(ScanAction.this, message, Toast.LENGTH_SHORT).show();
                         }
-
                         String hashPrefix = HASH.substring(0, 6);
                         Name_System(hashPrefix);
                         Visual_System(hashPrefix);
-
                         UpdateToUsers();
                         InitializeFireBase();
-
                         /**
                          * Pop up screens to ask user whether want to record location/image and leave comment
                          */
                         AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
                         builder.setMessage("Do you want to record the location?")
-
                                 /**
                                  * Recording location
                                  */
@@ -172,10 +161,8 @@ public class ScanAction extends AppCompatActivity {
                                                     locationManager.removeUpdates(this);
                                                     User_UpdateGeolocation();
                                                     UpdateGeolocation();
-
                                                     String message2 = "Successfully recording location";
                                                     Toast.makeText(ScanAction.this, message2, Toast.LENGTH_SHORT).show();
-
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
                                                     builder.setMessage("Do you want to record an image?")
                                                             /**
@@ -188,7 +175,6 @@ public class ScanAction extends AppCompatActivity {
                                                                     finish();
                                                                 }
                                                             })
-
                                                             /**
                                                              * Recording Location and Not recording image
                                                              */
@@ -204,7 +190,6 @@ public class ScanAction extends AppCompatActivity {
                                         }
                                     }
                                 })
-
                                 /**
                                  * Not recording location
                                  */
@@ -212,7 +197,6 @@ public class ScanAction extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int id) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
                                         builder.setMessage("Do you want to record an image?")
-
                                                 /**
                                                  * Not recording location and Recording image
                                                  */
@@ -220,69 +204,34 @@ public class ScanAction extends AppCompatActivity {
                                                     public void onClick(DialogInterface dialog, int id) {
                                                         Intent intent = new Intent(ScanAction.this, Record_image.class);
                                                         startActivity(intent);
-
                                                         finish();
-
-
                                                     }
-                                                };
-                                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
-                                            }
-                                        }
-                                    })
-
-                                    /**
-                                     * Not recording location
-                                     */
-                                    .setNeutralButton("No", new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
-                                            builder.setMessage("Do you want to record an image?")
-
-                                                    /**
-                                                     * Not recording location and Recording image
-                                                     */
-                                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            Intent intent = new Intent(ScanAction.this, Record_image.class);
-                                                            startActivity(intent);
-
-                                                            finish();
-
-
-                                                        }
-                                                    })
-
-                                                    /**
-                                                     * Not recording location and Not recording image
-                                                     */
-                                                    .setNeutralButton("No", new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            Comment();
-                                                        }
-                                                    });
-                                            builder.create().show();
-                                        }
-                                    });
-                            builder.create().show();
-                        }
-                    });
-                }
-            });
-            scannerView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    mCodeScanner.startPreview();
-                }
-            });
-
-        }
-
+                                                })
+                                                /**
+                                                 * Not recording location and Not recording image
+                                                 */
+                                                .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        Comment();
+                                                    }
+                                                });
+                                        builder.create().show();
+                                    }
+                                });
+                        builder.create().show();
+                    }
+                });
+            }
+        });
+        scannerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mCodeScanner.startPreview();
+            }
+        });
     }
-
-
     //Initialize QR Code FireBase
-    public void InitializeFireBase() {
+    public void  InitializeFireBase(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
         Query query = qrCollection.whereEqualTo("Name", String.valueOf(HASH));
@@ -297,7 +246,6 @@ public class ScanAction extends AppCompatActivity {
                         qrCode.put("Name", QR_Names);
                         qrCode.put("Score", QR_Point);
                         qrCollection.document(String.valueOf(HASH)).set(qrCode);
-
                         // Create a new users sub-collection
                         CollectionReference usersCollection = qrCollection.document(String.valueOf(HASH)).collection("users");
                         usersCollection.document(ID).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -316,13 +264,11 @@ public class ScanAction extends AppCompatActivity {
                             }
                         });
                     }
-
                 }
             }
         });
     }
-
-    public void UpdateGeolocation() {
+    public void  UpdateGeolocation(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
         DocumentReference qrHashDoc = qrCollection.document(String.valueOf(HASH));
@@ -334,8 +280,7 @@ public class ScanAction extends AppCompatActivity {
             }
         });
     }
-
-    public void UpdateToUsers() {
+    public void  UpdateToUsers(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference document = userCollection.document(ID);
@@ -350,8 +295,7 @@ public class ScanAction extends AppCompatActivity {
         data.put("Visual", QR_Visual);
         HashDoc.set(data);
     }
-
-    public void User_UpdateGeolocation() {
+    public void  User_UpdateGeolocation(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference document = userCollection.document(ID);
@@ -363,8 +307,7 @@ public class ScanAction extends AppCompatActivity {
             }
         });
     }
-
-    public void User_UpdateComment() {
+    public void  User_UpdateComment(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference userCollection = db.collection("username");
         DocumentReference document = userCollection.document(ID);
@@ -376,8 +319,7 @@ public class ScanAction extends AppCompatActivity {
             }
         });
     }
-
-    public void Comment() {
+    public void Comment(){
         AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
         builder.setTitle("Enter comments");
         builder.setMessage("Please enter your comments:");
@@ -395,7 +337,6 @@ public class ScanAction extends AppCompatActivity {
                 finish();
             }
         });
-
         builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -409,7 +350,6 @@ public class ScanAction extends AppCompatActivity {
         AlertDialog dialog1 = builder.create();
         dialog1.show();
     }
-
     public void Name_System(String str) {
         String[] name1 = {"Cool ", "Hot "};
         String[] name2 = {"Fro", "Glo"};
@@ -417,11 +357,9 @@ public class ScanAction extends AppCompatActivity {
         String[] name4 = {"Mega", "Ultra"};
         String[] name5 = {"Spectral", "Sonic"};
         String[] name6 = {"Shark", "Crab"};
-
         for (int i = 0; i < 6 && i < str.length(); i++) {
             String[] currentArray;
             char currentChar = str.charAt(i);
-
             if (Character.isLetter(currentChar)) {
                 currentArray = i == 0 ? name1 : i == 1 ? name2 : i == 2 ? name3 : i == 3 ? name4 : i == 4 ? name5 : name6;
                 QR_Names += currentArray[0];
@@ -431,10 +369,8 @@ public class ScanAction extends AppCompatActivity {
             }
         }
         QR_Names = QR_Names.substring(4);
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference qrCollection = db.collection("QR Codes");
-
         int counter = 1;
         while (true) {
             String nameToCheck = QR_Names + (counter > 1 ? " " + counter : "");
@@ -475,41 +411,37 @@ public class ScanAction extends AppCompatActivity {
             }
 
         }
+
     }
 
-
-        public void Visual_System (String str){
-            String[] eye = {"^", "0"};
-            String[] ear = {"3", "@"};
-            String[] Eyebrow = {"-", "~"};
-            String[] mouse = {"v", "-"};
-            String[] hand = {"/", "d"};
-            String[] flower = {"*", " "};
-
-            for (int i = 0; i < 6 && i < str.length(); i++) {
-                String[] currentArray;
-                char currentChar = str.charAt(i);
-
-                if (Character.isLetter(currentChar)) {
-                    currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
-                    QR_Visual += currentArray[0];
-                } else if (Character.isDigit(currentChar)) {
-                    currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
-                    QR_Visual += currentArray[1];
-                }
+    public void Visual_System(String str){
+        String[] eye = {"^", "0"};
+        String[] ear = {"3", "@"};
+        String[] Eyebrow = {"-", "~"};
+        String[] mouse = {"v", "-"};
+        String[] hand = {"/", "d"};
+        String[] flower = {"*", " "};
+        for (int i = 0; i < 6 && i < str.length(); i++) {
+            String[] currentArray;
+            char currentChar = str.charAt(i);
+            if (Character.isLetter(currentChar)) {
+                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
+                QR_Visual += currentArray[0];
+            } else if (Character.isDigit(currentChar)) {
+                currentArray = i == 0 ? eye : i == 1 ? ear : i == 2 ? Eyebrow : i == 3 ? mouse : i == 4 ? hand : flower;
+                QR_Visual += currentArray[1];
             }
-            QR_Visual = QR_Visual.substring(4);
         }
-
-        @Override
-        protected void onResume () {
-            super.onResume();
-            mCodeScanner.startPreview();
-        }
-
-        @Override
-        protected void onPause () {
-            mCodeScanner.releaseResources();
-            super.onPause();
-        }
+        QR_Visual = QR_Visual.substring(4);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mCodeScanner.startPreview();
+    }
+    @Override
+    protected void onPause() {
+        mCodeScanner.releaseResources();
+        super.onPause();
+    }
+}
