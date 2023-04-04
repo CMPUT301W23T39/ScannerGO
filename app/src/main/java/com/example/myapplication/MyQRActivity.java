@@ -65,25 +65,24 @@ public class MyQRActivity extends AppCompatActivity {
 // Get the document with ID "some username" from the "username" collection
 
         qrCodesCollection.get().addOnCompleteListener(task -> {
-
-            if (task.isSuccessful()) {
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    if (QRCode.equals(document.getString("Name"))) {
-                        String comment = document.getString("Comment");
-                        CommentText.setText("Comment: " + comment);
-                        Long score = document.getLong("Point");
-                        ScoreText.setText("Score: " + score);
-                        GeoPoint location = document.getGeoPoint("Location");
-                        double lat = location.getLatitude();
-                        double lng = location.getLongitude();
-                        String loc = lat + ", " + lng;
-                        LocationText.setText("Location: " + loc);
-                        Hash = document.getString("HASH");
-                        loadImage(username,userImage);
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            if (QRCode.equals(document.getString("Name"))) {
+                                String comment = document.getString("Comment");
+                                CommentText.setText("Comment: " + comment);
+                                Long score = document.getLong("Point");
+                                ScoreText.setText("Score: " + score);
+                                GeoPoint location = document.getGeoPoint("Location");
+                                double lat = location.getLatitude();
+                                double lng = location.getLongitude();
+                                String loc = lat + ", " + lng;
+                                LocationText.setText("Location: " + loc);
+                                Hash = document.getString("HASH");
+                                loadImage(username,userImage);
+                            }
+                        }
                     }
-                }
-            }
-        });
+                });
         CollectionReference qrCollection = db.collection("QR Codes");
         DocumentReference qrDocRef = qrCollection.document(Hash);
         CollectionReference SameUserCollection = qrDocRef.collection("users");

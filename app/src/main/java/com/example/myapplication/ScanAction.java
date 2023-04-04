@@ -108,40 +108,22 @@ public class ScanAction extends AppCompatActivity {
                     Manifest.permission.CAMERA
             }, 100);
         }
-        mCodeScanner.setDecodeCallback(new DecodeCallback() {
-            @Override
-            public void onDecoded(@NonNull final Result result) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        onPause();
+            mCodeScanner.setDecodeCallback(new DecodeCallback() {
+                @Override
+                public void onDecoded(@NonNull final Result result) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onPause();
 
-                        try {
-                            /**
-                             * 256 HASH
-                             */
-                            MessageDigest md = MessageDigest.getInstance("SHA-256");
-                            byte[] hash = md.digest((result.getText() + SEED).getBytes(StandardCharsets.UTF_8));
-                            for (byte b : hash) {
-                                HASH.append(String.format("%02x", b));
-                            }
-                            setHash(String.valueOf(HASH));
-                            /**
-                             * Number of repeats
-                             */
-                            Pattern pattern = Pattern.compile("([\\da-f])\\1+");
-                            Matcher matcher = pattern.matcher(HASH);
-
-                            /**
-                             * Get the score
-                             */
-                            while (matcher.find()) {
-                                int base = 0;
-                                String repeat = matcher.group();
-                                if (Character.isDigit(repeat.charAt(0))) {
-                                    base = repeat.charAt(0) - '0'; //get int.
-                                } else {
-                                    base = (int) repeat.charAt(0) - 'a' + 10; //alphabet to int, for example a = 10.
+                            try {
+                                /**
+                                 * 256 HASH
+                                 */
+                                MessageDigest md = MessageDigest.getInstance("SHA-256");
+                                byte[] hash = md.digest((result.getText() + SEED).getBytes(StandardCharsets.UTF_8));
+                                for (byte b : hash) {
+                                    HASH.append(String.format("%02x", b));
                                 }
                                 int exponent = repeat.length() - 1; // exponent for "b" repeats
                                 int score = (int) Math.pow(base, exponent); // calculate output value
@@ -243,30 +225,58 @@ public class ScanAction extends AppCompatActivity {
 
 
                                                     }
-                                                })
+                                                };
+                                                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+                                            }
+                                        }
+                                    })
 
-                                                /**
-                                                 * Not recording location and Not recording image
-                                                 */
-                                                .setNeutralButton("No", new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        Comment();
-                                                    }
-                                                });
-                                        builder.create().show();
-                                    }
-                                });
-                        builder.create().show();
-                    }
-                });
-            }
-        });
-        scannerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mCodeScanner.startPreview();
-            }
-        });
+                                    /**
+                                     * Not recording location
+                                     */
+                                    .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(ScanAction.this);
+                                            builder.setMessage("Do you want to record an image?")
+
+                                                    /**
+                                                     * Not recording location and Recording image
+                                                     */
+                                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            Intent intent = new Intent(ScanAction.this, Record_image.class);
+                                                            startActivity(intent);
+
+                                                            finish();
+
+
+                                                        }
+                                                    })
+
+                                                    /**
+                                                     * Not recording location and Not recording image
+                                                     */
+                                                    .setNeutralButton("No", new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            Comment();
+                                                        }
+                                                    });
+                                            builder.create().show();
+                                        }
+                                    });
+                            builder.create().show();
+                        }
+                    });
+                }
+            });
+            scannerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mCodeScanner.startPreview();
+                }
+            });
+
+        }
 
     }
 
