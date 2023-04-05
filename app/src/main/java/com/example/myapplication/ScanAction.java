@@ -288,11 +288,13 @@ public class ScanAction extends AppCompatActivity {
         DocumentReference HashDoc = qrCollection.document(String.valueOf(HASH));
         GeoPoint location = new GeoPoint(QR_Latitude, QR_Longitude);
         Map<String, Object> data = new HashMap<>();
+        data.put("HASH", HASH);
         data.put("Name", QR_Names);
         data.put("Point", QR_Point);
         data.put("Comment", QR_Comment);
         data.put("Location", location);
         data.put("Visual", QR_Visual);
+        data.put("HASH", String.valueOf(HASH));
         HashDoc.set(data);
     }
     public void  User_UpdateGeolocation(){

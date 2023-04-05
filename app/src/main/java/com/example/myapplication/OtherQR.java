@@ -84,7 +84,6 @@ public class OtherQR extends AppCompatActivity {
                 finish();
             }
         });
-
     }
     private void loadImage(String username, ImageView imageView) {
         FirebaseStorage storage = FirebaseStorage.getInstance();

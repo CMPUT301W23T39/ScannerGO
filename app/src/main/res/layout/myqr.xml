@@ -14,13 +14,6 @@
         android:textSize="24sp" />
 
     <TextView
-
-        android:id="@+id/Location_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="location:" />
-
-    <TextView
         android:id="@+id/qrcode_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,6 +36,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Username who have same QR" />
+
+    <TextView
+        android:id="@+id/location_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Location:" />
 
     <ImageView
         android:id="@+id/loc_image"
